@@ -6,6 +6,10 @@
         public const uint AddFunct3 = 0b000;
         public const uint AddFunct7 = 0b0000000;
 
+        public const uint SubOpCode = AddOpCode;
+        public const uint SubFunct3 = AddFunct3;
+        public const uint SubFunct7 = 0b0100000;
+
         public uint Code { get; internal set; }
 
         public InstructionRV32I_R(uint opcode, RegisterAddressRV32I destination, uint function3, RegisterAddressRV32I source1, RegisterAddressRV32I source2, uint function7)
@@ -61,12 +65,26 @@
             return i;
         }
 
+        public static InstructionRV32I_R Sub(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
+        {
+            if (destination == RegisterAddressRV32I.R0)
+            {
+                throw new InvalidOperationException("R0 cannot be used as the destination");
+            }
+
+            var i = new InstructionRV32I_R(SubOpCode, destination, SubFunct3, source1, source2, SubFunct7);
+            return i;
+        }
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch ((this.GetOpCode(), Function3, Function7))
             {
                 case (AddOpCode, AddFunct3, AddFunct7):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) + executionState.GetRegisterValue(SourceRegister2));
+                    break;
+                case (SubOpCode, SubFunct3, SubFunct7):
+                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) - executionState.GetRegisterValue(SourceRegister2));
                     break;
                 default:
                     throw new NotImplementedException();
