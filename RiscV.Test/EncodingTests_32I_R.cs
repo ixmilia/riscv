@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 
 namespace RiscV.Test
 {
@@ -43,6 +41,14 @@ namespace RiscV.Test
         {
             var i = InstructionRV32I_R.Sra(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, RegisterAddressRV32I.R4);
             AssertEqualBinary(0b0100000_00100_00010_101_10001_0110011u, i.Code);
+            //                  funct7  rs2   rs1   f3  dest  opcode
+        }
+
+        [Fact]
+        public void Slt()
+        {
+            var i = InstructionRV32I_R.Slt(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, RegisterAddressRV32I.R4);
+            AssertEqualBinary(0b0000000_00100_00010_010_10001_0110011u, i.Code);
             //                  funct7  rs2   rs1   f3  dest  opcode
         }
     }
