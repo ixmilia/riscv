@@ -31,6 +31,9 @@
         public const uint OrFunct3 = 0b110;
         public const uint OrFunct7 = 0b0000000;
 
+        public const uint XorFunct3 = 0b100;
+        public const uint XorFunct7 = 0b0000000;
+
         public uint Code { get; internal set; }
 
         private InstructionRV32I_R(uint code)
@@ -92,6 +95,7 @@
                 case (SltuFunct7, SltuFunct3):
                 case (AndFunct7, AndFunct3):
                 case (OrFunct7, OrFunct3):
+                case (XorFunct7, XorFunct3):
                     // perfectly fine function
                     break;
                 default:
@@ -200,6 +204,17 @@
             return i;
         }
 
+        public static InstructionRV32I_R Xor(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
+        {
+            if (destination == RegisterAddressRV32I.R0)
+            {
+                throw new InvalidOperationException("R0 cannot be used as the destination");
+            }
+
+            var i = new InstructionRV32I_R(destination, XorFunct3, source1, source2, XorFunct7);
+            return i;
+        }
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch ((Function3, Function7))
@@ -230,6 +245,9 @@
                     break;
                 case (OrFunct3, OrFunct7):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) | executionState.GetRegisterValue(SourceRegister2));
+                    break;
+                case (XorFunct3, XorFunct7):
+                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) ^ executionState.GetRegisterValue(SourceRegister2));
                     break;
                 default:
                     throw new NotImplementedException();
