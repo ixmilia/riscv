@@ -38,5 +38,16 @@ namespace RiscV.Test
             e.Execute(sub);
             Assert.Equal(0b10000u, e.X17);
         }
+
+        [Fact]
+        public void Srl()
+        {
+            var e = CreateExecutionState();
+            e.X2 = 0b0100;
+            e.X4 = 2;
+            var sub = IInstructionRV32I.Srl(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, RegisterAddressRV32I.R4);
+            e.Execute(sub);
+            Assert.Equal(0b0001u, e.X17);
+        }
     }
 }
