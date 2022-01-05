@@ -2,26 +2,29 @@
 {
     public struct InstructionRV32I_R : IInstructionRV32I
     {
-        public const uint AddOpCode = 0b0110011;
+        public const uint OpCode = 0b0110011;
+
         public const uint AddFunct3 = 0b000;
         public const uint AddFunct7 = 0b0000000;
 
-        public const uint SubOpCode = AddOpCode;
-        public const uint SubFunct3 = AddFunct3;
+        public const uint SubFunct3 = 0b000;
         public const uint SubFunct7 = 0b0100000;
 
         public uint Code { get; internal set; }
 
-        public InstructionRV32I_R(uint opcode, RegisterAddressRV32I destination, uint function3, RegisterAddressRV32I source1, RegisterAddressRV32I source2, uint function7)
+        private InstructionRV32I_R(uint code)
         {
-            uint code = 0;
-            code = BitMaskHelpers.SetBitsUint(code, 0, 7, opcode);
-            code = BitMaskHelpers.SetBitsUint(code, 7, 5, (uint)destination);
-            code = BitMaskHelpers.SetBitsUint(code, 12, 3, function3);
-            code = BitMaskHelpers.SetBitsUint(code, 15, 5, (uint)source1);
-            code = BitMaskHelpers.SetBitsUint(code, 20, 5, (uint)source2);
-            code = BitMaskHelpers.SetBitsUint(code, 25, 7, function7);
             Code = code;
+        }
+
+        public InstructionRV32I_R(RegisterAddressRV32I destination, uint function3, RegisterAddressRV32I source1, RegisterAddressRV32I source2, uint function7)
+        {
+            Code = OpCode;
+            DestinationRegister = destination;
+            Function3 = function3;
+            SourceRegister1 = source1;
+            SourceRegister2 = source2;
+            Function7 = function7;
         }
 
         public RegisterAddressRV32I DestinationRegister
@@ -54,6 +57,22 @@
             set => Code = BitMaskHelpers.SetBitsUint(Code, 25, 7, value);
         }
 
+        public static InstructionRV32I_R Decode(uint code)
+        {
+            var i = new InstructionRV32I_R(code);
+            switch (i.Function7, i.Function3)
+            {
+                case (AddFunct7, AddFunct3):
+                case (SubFunct7, SubFunct3):
+                    // perfectly fine function
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+
+            return i;
+        }
+
         public static InstructionRV32I_R Add(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
         {
             if (destination == RegisterAddressRV32I.R0)
@@ -61,7 +80,7 @@
                 throw new InvalidOperationException("R0 cannot be used as the destination");
             }
 
-            var i = new InstructionRV32I_R(AddOpCode, destination, AddFunct3, source1, source2, AddFunct7);
+            var i = new InstructionRV32I_R(destination, AddFunct3, source1, source2, AddFunct7);
             return i;
         }
 
@@ -72,18 +91,18 @@
                 throw new InvalidOperationException("R0 cannot be used as the destination");
             }
 
-            var i = new InstructionRV32I_R(SubOpCode, destination, SubFunct3, source1, source2, SubFunct7);
+            var i = new InstructionRV32I_R(destination, SubFunct3, source1, source2, SubFunct7);
             return i;
         }
 
         internal void Execute(ExecutionStateRV32I executionState)
         {
-            switch ((this.GetOpCode(), Function3, Function7))
+            switch ((Function3, Function7))
             {
-                case (AddOpCode, AddFunct3, AddFunct7):
+                case (AddFunct3, AddFunct7):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) + executionState.GetRegisterValue(SourceRegister2));
                     break;
-                case (SubOpCode, SubFunct3, SubFunct7):
+                case (SubFunct3, SubFunct7):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) - executionState.GetRegisterValue(SourceRegister2));
                     break;
                 default:
