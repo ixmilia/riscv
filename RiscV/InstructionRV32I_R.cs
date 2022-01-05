@@ -7,18 +7,6 @@
         public const uint AddFunct3 = 0b000;
         public const uint AddFunct7 = 0b0000000;
 
-        public const uint SubFunct3 = 0b000;
-        public const uint SubFunct7 = 0b0100000;
-
-        public const uint SllFunct3 = 0b001;
-        public const uint SllFunct7 = 0b0000000;
-
-        public const uint SrlFunct3 = 0b101;
-        public const uint SrlFunct7 = 0b0000000;
-
-        public const uint SraFunct3 = 0b101;
-        public const uint SraFunct7 = 0b0100000;
-
         public const uint SltFunct3 = 0b010;
         public const uint SltFunct7 = 0b0000000;
 
@@ -33,6 +21,18 @@
 
         public const uint XorFunct3 = 0b100;
         public const uint XorFunct7 = 0b0000000;
+
+        public const uint SllFunct3 = 0b001;
+        public const uint SllFunct7 = 0b0000000;
+
+        public const uint SrlFunct3 = 0b101;
+        public const uint SrlFunct7 = 0b0000000;
+
+        public const uint SubFunct3 = 0b000;
+        public const uint SubFunct7 = 0b0100000;
+
+        public const uint SraFunct3 = 0b101;
+        public const uint SraFunct7 = 0b0100000;
 
         public uint Code { get; internal set; }
 
@@ -87,15 +87,15 @@
             switch (i.Function7, i.Function3)
             {
                 case (AddFunct7, AddFunct3):
-                case (SubFunct7, SubFunct3):
-                case (SllFunct7, SllFunct3):
-                case (SrlFunct7, SrlFunct3):
-                case (SraFunct7, SraFunct3):
                 case (SltFunct7, SltFunct3):
                 case (SltuFunct7, SltuFunct3):
                 case (AndFunct7, AndFunct3):
                 case (OrFunct7, OrFunct3):
                 case (XorFunct7, XorFunct3):
+                case (SllFunct7, SllFunct3):
+                case (SrlFunct7, SrlFunct3):
+                case (SubFunct7, SubFunct3):
+                case (SraFunct7, SraFunct3):
                     // perfectly fine function
                     break;
                 default:
@@ -105,115 +105,36 @@
             return i;
         }
 
-        public static InstructionRV32I_R Add(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
+        private static InstructionRV32I_R CreateInstruction(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2, uint funct3, uint funct7)
         {
             if (destination == RegisterAddressRV32I.R0)
             {
                 throw new InvalidOperationException("R0 cannot be used as the destination");
             }
 
-            var i = new InstructionRV32I_R(destination, AddFunct3, source1, source2, AddFunct7);
+            var i = new InstructionRV32I_R(destination, funct3, source1, source2, funct7);
             return i;
         }
 
-        public static InstructionRV32I_R Sub(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
-        {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
-            }
+        public static InstructionRV32I_R Add(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2) => CreateInstruction(destination, source1, source2, AddFunct3, AddFunct7);
 
-            var i = new InstructionRV32I_R(destination, SubFunct3, source1, source2, SubFunct7);
-            return i;
-        }
+        public static InstructionRV32I_R Slt(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2) => CreateInstruction(destination, source1, source2, SltFunct3, SltFunct7);
 
-        public static InstructionRV32I_R Sll(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
-        {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
-            }
+        public static InstructionRV32I_R Sltu(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2) => CreateInstruction(destination, source1, source2, SltuFunct3, SltuFunct7);
 
-            var i = new InstructionRV32I_R(destination, SllFunct3, source1, source2, SllFunct7);
-            return i;
-        }
+        public static InstructionRV32I_R And(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2) => CreateInstruction(destination, source1, source2, AndFunct3, AndFunct7);
 
-        public static InstructionRV32I_R Srl(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
-        {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
-            }
+        public static InstructionRV32I_R Or(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2) => CreateInstruction(destination, source1, source2, OrFunct3, OrFunct7);
 
-            var i = new InstructionRV32I_R(destination, SrlFunct3, source1, source2, SrlFunct7);
-            return i;
-        }
+        public static InstructionRV32I_R Xor(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2) => CreateInstruction(destination, source1, source2, XorFunct3, XorFunct7);
 
-        public static InstructionRV32I_R Sra(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
-        {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
-            }
+        public static InstructionRV32I_R Sll(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2) => CreateInstruction(destination, source1, source2, SllFunct3, SllFunct7);
 
-            var i = new InstructionRV32I_R(destination, SraFunct3, source1, source2, SraFunct7);
-            return i;
-        }
+        public static InstructionRV32I_R Srl(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2) => CreateInstruction(destination, source1, source2, SrlFunct3, SrlFunct7);
 
-        public static InstructionRV32I_R Slt(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
-        {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
-            }
+        public static InstructionRV32I_R Sub(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2) => CreateInstruction(destination, source1, source2, SubFunct3, SubFunct7);
 
-            var i = new InstructionRV32I_R(destination, SltFunct3, source1, source2, SltFunct7);
-            return i;
-        }
-
-        public static InstructionRV32I_R Sltu(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
-        {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
-            }
-
-            var i = new InstructionRV32I_R(destination, SltuFunct3, source1, source2, SltuFunct7);
-            return i;
-        }
-
-        public static InstructionRV32I_R And(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
-        {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
-            }
-
-            var i = new InstructionRV32I_R(destination, AndFunct3, source1, source2, AndFunct7);
-            return i;
-        }
-
-        public static InstructionRV32I_R Or(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
-        {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
-            }
-
-            var i = new InstructionRV32I_R(destination, OrFunct3, source1, source2, OrFunct7);
-            return i;
-        }
-
-        public static InstructionRV32I_R Xor(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
-        {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
-            }
-
-            var i = new InstructionRV32I_R(destination, XorFunct3, source1, source2, XorFunct7);
-            return i;
-        }
+        public static InstructionRV32I_R Sra(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2) => CreateInstruction(destination, source1, source2, SraFunct3, SraFunct7);
 
         internal void Execute(ExecutionStateRV32I executionState)
         {
@@ -221,18 +142,6 @@
             {
                 case (AddFunct3, AddFunct7):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) + executionState.GetRegisterValue(SourceRegister2));
-                    break;
-                case (SubFunct3, SubFunct7):
-                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) - executionState.GetRegisterValue(SourceRegister2));
-                    break;
-                case (SllFunct3, SllFunct7):
-                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) << (int)BitMaskHelpers.GetBitsUint(executionState.GetRegisterValue(SourceRegister2), 0, 5));
-                    break;
-                case (SrlFunct3, SrlFunct7):
-                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) >> (int)BitMaskHelpers.GetBitsUint(executionState.GetRegisterValue(SourceRegister2), 0, 5));
-                    break;
-                case (SraFunct3, SraFunct7):
-                    executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) >> (int)BitMaskHelpers.GetBitsUint(executionState.GetRegisterValue(SourceRegister2), 0, 5)));
                     break;
                 case (SltFunct3, SltFunct7):
                     executionState.SetRegisterValue(DestinationRegister, (int)executionState.GetRegisterValue(SourceRegister1) < (int)executionState.GetRegisterValue(SourceRegister2) ? 1u : 0);
@@ -248,6 +157,18 @@
                     break;
                 case (XorFunct3, XorFunct7):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) ^ executionState.GetRegisterValue(SourceRegister2));
+                    break;
+                case (SllFunct3, SllFunct7):
+                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) << (int)BitMaskHelpers.GetBitsUint(executionState.GetRegisterValue(SourceRegister2), 0, 5));
+                    break;
+                case (SrlFunct3, SrlFunct7):
+                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) >> (int)BitMaskHelpers.GetBitsUint(executionState.GetRegisterValue(SourceRegister2), 0, 5));
+                    break;
+                case (SubFunct3, SubFunct7):
+                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) - executionState.GetRegisterValue(SourceRegister2));
+                    break;
+                case (SraFunct3, SraFunct7):
+                    executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) >> (int)BitMaskHelpers.GetBitsUint(executionState.GetRegisterValue(SourceRegister2), 0, 5)));
                     break;
                 default:
                     throw new NotImplementedException();
