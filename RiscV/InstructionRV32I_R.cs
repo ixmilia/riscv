@@ -16,6 +16,9 @@
         public const uint SrlFunct3 = 0b101;
         public const uint SrlFunct7 = 0b0000000;
 
+        public const uint SraFunct3 = 0b101;
+        public const uint SraFunct7 = 0b0100000;
+
         public uint Code { get; internal set; }
 
         private InstructionRV32I_R(uint code)
@@ -72,6 +75,7 @@
                 case (SubFunct7, SubFunct3):
                 case (SllFunct7, SllFunct3):
                 case (SrlFunct7, SrlFunct3):
+                case (SraFunct7, SraFunct3):
                     // perfectly fine function
                     break;
                 default:
@@ -125,6 +129,17 @@
             return i;
         }
 
+        public static InstructionRV32I_R Sra(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
+        {
+            if (destination == RegisterAddressRV32I.R0)
+            {
+                throw new InvalidOperationException("R0 cannot be used as the destination");
+            }
+
+            var i = new InstructionRV32I_R(destination, SraFunct3, source1, source2, SraFunct7);
+            return i;
+        }
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch ((Function3, Function7))
@@ -140,6 +155,9 @@
                     break;
                 case (SrlFunct3, SrlFunct7):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) >> (int)BitMaskHelpers.GetBitsUint(executionState.GetRegisterValue(SourceRegister2), 0, 5));
+                    break;
+                case (SraFunct3, SraFunct7):
+                    executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) >> (int)BitMaskHelpers.GetBitsUint(executionState.GetRegisterValue(SourceRegister2), 0, 5)));
                     break;
                 default:
                     throw new NotImplementedException();

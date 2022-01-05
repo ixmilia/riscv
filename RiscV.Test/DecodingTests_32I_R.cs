@@ -3,7 +3,7 @@ using Xunit;
 
 namespace RiscV.Test
 {
-    public class DecodingTests_32I_R
+    public class DecodingTests_32I_R : TestBase
     {
         private static InstructionRV32I_R Decode(uint code) => InstructionRV32I_R.Decode(code);
 
@@ -41,6 +41,16 @@ namespace RiscV.Test
         public void Srl()
         {
             var c = Decode(0b0000000_00100_00010_101_10001_0110011u);
+            //               funct7  rs2   rs1   f3  dest  opcode
+            Assert.Equal(RegisterAddressRV32I.R2, c.SourceRegister1);
+            Assert.Equal(RegisterAddressRV32I.R4, c.SourceRegister2);
+            Assert.Equal(RegisterAddressRV32I.R17, c.DestinationRegister);
+        }
+
+        [Fact]
+        public void Sra()
+        {
+            var c = Decode(0b0100000_00100_00010_101_10001_0110011u);
             //               funct7  rs2   rs1   f3  dest  opcode
             Assert.Equal(RegisterAddressRV32I.R2, c.SourceRegister1);
             Assert.Equal(RegisterAddressRV32I.R4, c.SourceRegister2);

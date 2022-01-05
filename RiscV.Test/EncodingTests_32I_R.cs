@@ -4,38 +4,8 @@ using Xunit;
 
 namespace RiscV.Test
 {
-    public class EncodingTests_32I_R
+    public class EncodingTests_32I_R : TestBase
     {
-        private static string Intersperse(string s, char c, params int[] indicies)
-        {
-            var sb = new StringBuilder();
-            var currentIndex = 0;
-            foreach (var i in indicies)
-            {
-                sb.Append(s.Substring(currentIndex, i - currentIndex));
-                sb.Append(c);
-                currentIndex = i;
-            }
-
-            sb.Append(s.Substring(currentIndex));
-            return sb.ToString();
-        }
-
-        private static string AsBinary(uint value)
-        {
-            var result = Convert.ToString(value, 2);
-            var prefix = new string('0', 32 - result.Length);
-            var full = prefix + result;
-            return Intersperse(full, '_', 7, 12, 17, 20, 25);
-        }
-
-        private static void AssertEqualBinary(uint expected, uint actual)
-        {
-            var expectedS = AsBinary(expected);
-            var actualS = AsBinary(actual);
-            Assert.Equal(expectedS, actualS);
-        }
-
         [Fact]
         public void Add()
         {
@@ -65,6 +35,14 @@ namespace RiscV.Test
         {
             var i = InstructionRV32I_R.Srl(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, RegisterAddressRV32I.R4);
             AssertEqualBinary(0b0000000_00100_00010_101_10001_0110011u, i.Code);
+            //                  funct7  rs2   rs1   f3  dest  opcode
+        }
+
+        [Fact]
+        public void Sra()
+        {
+            var i = InstructionRV32I_R.Sra(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, RegisterAddressRV32I.R4);
+            AssertEqualBinary(0b0100000_00100_00010_101_10001_0110011u, i.Code);
             //                  funct7  rs2   rs1   f3  dest  opcode
         }
     }
