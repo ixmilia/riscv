@@ -28,6 +28,16 @@ namespace RiscV.Test
         }
 
         [Fact]
+        public void Sll()
+        {
+            var c = Decode(0b0000000_00100_00010_001_10001_0110011u);
+            //               funct7  rs2   rs1   f3  dest  opcode
+            Assert.Equal(RegisterAddressRV32I.R2, c.SourceRegister1);
+            Assert.Equal(RegisterAddressRV32I.R4, c.SourceRegister2);
+            Assert.Equal(RegisterAddressRV32I.R17, c.DestinationRegister);
+        }
+
+        [Fact]
         public void Invalid()
         {
             Assert.Throws<NotSupportedException>(() =>

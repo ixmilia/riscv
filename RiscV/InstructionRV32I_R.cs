@@ -10,6 +10,9 @@
         public const uint SubFunct3 = 0b000;
         public const uint SubFunct7 = 0b0100000;
 
+        public const uint SllFunct3 = 0b001;
+        public const uint SllFunct7 = 0b0000000;
+
         public uint Code { get; internal set; }
 
         private InstructionRV32I_R(uint code)
@@ -64,6 +67,7 @@
             {
                 case (AddFunct7, AddFunct3):
                 case (SubFunct7, SubFunct3):
+                case (SllFunct7, SllFunct3):
                     // perfectly fine function
                     break;
                 default:
@@ -95,6 +99,17 @@
             return i;
         }
 
+        public static InstructionRV32I_R Sll(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2)
+        {
+            if (destination == RegisterAddressRV32I.R0)
+            {
+                throw new InvalidOperationException("R0 cannot be used as the destination");
+            }
+
+            var i = new InstructionRV32I_R(destination, SllFunct3, source1, source2, SllFunct7);
+            return i;
+        }
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch ((Function3, Function7))
@@ -104,6 +119,9 @@
                     break;
                 case (SubFunct3, SubFunct7):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) - executionState.GetRegisterValue(SourceRegister2));
+                    break;
+                case (SllFunct3, SllFunct7):
+                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) << (int)BitMaskHelpers.GetBitsUint(executionState.GetRegisterValue(SourceRegister2), 0, 5));
                     break;
                 default:
                     throw new NotImplementedException();
