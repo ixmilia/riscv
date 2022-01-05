@@ -65,9 +65,30 @@ namespace RiscV.Test
         public void Slt()
         {
             var e = CreateExecutionState();
-            e.X2 = 0b10000000_00000000_00000000_00000100;
-            e.X4 = 2;
+            e.X2 = 4;
+            e.X4 = 20;
             var sub = IInstructionRV32I.Slt(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, RegisterAddressRV32I.R4);
+            e.Execute(sub);
+            AssertEqualBinary(1, e.X17);
+        }
+
+        [Fact]
+        public void Sltu()
+        {
+            var e = CreateExecutionState();
+            e.X2 = 4;
+            e.X4 = 20;
+            var sub = IInstructionRV32I.Sltu(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, RegisterAddressRV32I.R4);
+            e.Execute(sub);
+            AssertEqualBinary(1, e.X17);
+        }
+
+        [Fact]
+        public void SltuWithX0()
+        {
+            var e = CreateExecutionState();
+            e.X4 = 2;
+            var sub = IInstructionRV32I.Sltu(RegisterAddressRV32I.R17, RegisterAddressRV32I.R0, RegisterAddressRV32I.R4);
             e.Execute(sub);
             AssertEqualBinary(1, e.X17);
         }
