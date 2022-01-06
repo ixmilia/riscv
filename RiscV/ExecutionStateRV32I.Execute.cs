@@ -6,6 +6,9 @@
         {
             switch (instruction)
             {
+                case InstructionRV32I_I ii:
+                    ii.Execute(this);
+                    break;
                 case InstructionRV32I_R ri:
                     ri.Execute(this);
                     break;

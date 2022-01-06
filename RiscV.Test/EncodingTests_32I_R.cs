@@ -4,6 +4,14 @@ namespace RiscV.Test
 {
     public class EncodingTests_32I_R : TestBase
     {
+        protected static void AssertEqualBinary(uint expected, uint actual)
+        {
+            var indices = new[] { 7, 12, 17, 20, 25 };
+            var expectedS = AsBinary(expected, indices);
+            var actualS = AsBinary(actual, indices);
+            Assert.Equal(expectedS, actualS);
+        }
+
         [Fact]
         public void Add()
         {

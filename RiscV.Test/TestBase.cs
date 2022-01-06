@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using Xunit;
 
 namespace RiscV.Test
 {
@@ -21,19 +20,12 @@ namespace RiscV.Test
             return sb.ToString();
         }
 
-        protected static string AsBinary(uint value)
+        protected static string AsBinary(uint value, params int[] indicies)
         {
             var result = Convert.ToString(value, 2);
             var prefix = new string('0', 32 - result.Length);
             var full = prefix + result;
-            return Intersperse(full, '_', 7, 12, 17, 20, 25);
-        }
-
-        protected static void AssertEqualBinary(uint expected, uint actual)
-        {
-            var expectedS = AsBinary(expected);
-            var actualS = AsBinary(actual);
-            Assert.Equal(expectedS, actualS);
+            return Intersperse(full, '_', indicies);
         }
     }
 }
