@@ -19,8 +19,8 @@ namespace RiscV.Test
         {
             var e = CreateExecutionState();
             e.X2 = 2;
-            var add = IInstructionRV32I.AddI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 4);
-            e.Execute(add);
+            var i = IInstructionRV32I.AddI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 4);
+            e.Execute(i);
             AssertEqualBinary(6u, e.X17);
         }
 
@@ -29,8 +29,8 @@ namespace RiscV.Test
         {
             var e = CreateExecutionState();
             e.X2 = 2;
-            var add = IInstructionRV32I.SltI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 4);
-            e.Execute(add);
+            var i = IInstructionRV32I.SltI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 4);
+            e.Execute(i);
             AssertEqualBinary(1u, e.X17);
         }
 
@@ -39,8 +39,8 @@ namespace RiscV.Test
         {
             var e = CreateExecutionState();
             e.X2 = 2;
-            var add = IInstructionRV32I.SltIU(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 4);
-            e.Execute(add);
+            var i = IInstructionRV32I.SltIU(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 4);
+            e.Execute(i);
             AssertEqualBinary(1u, e.X17);
         }
 
@@ -49,8 +49,8 @@ namespace RiscV.Test
         {
             var e = CreateExecutionState();
             e.X2 = 7;
-            var add = IInstructionRV32I.AndI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, -4);
-            e.Execute(add);
+            var i = IInstructionRV32I.AndI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, -4);
+            e.Execute(i);
             AssertEqualBinary(0b0100u, e.X17);
         }
 
@@ -59,8 +59,8 @@ namespace RiscV.Test
         {
             var e = CreateExecutionState();
             e.X2 = 7;
-            var add = IInstructionRV32I.OrI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, -4);
-            e.Execute(add);
+            var i = IInstructionRV32I.OrI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, -4);
+            e.Execute(i);
             AssertEqualBinary(0b11111111_11111111_11111111_11111111u, e.X17);
         }
 
@@ -69,9 +69,19 @@ namespace RiscV.Test
         {
             var e = CreateExecutionState();
             e.X2 = 7;
-            var add = IInstructionRV32I.XorI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, -4);
-            e.Execute(add);
+            var i = IInstructionRV32I.XorI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, -4);
+            e.Execute(i);
             AssertEqualBinary(0b11111111_11111111_11111111_11111011u, e.X17);
+        }
+
+        [Fact]
+        public void SllI ()
+        {
+            var e = CreateExecutionState();
+            e.X2 = 0b0111;
+            var i = IInstructionRV32I.SllI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 2);
+            e.Execute(i);
+            AssertEqualBinary(0b00000000_00000000_00000000_00011100u, e.X17);
         }
     }
 }
