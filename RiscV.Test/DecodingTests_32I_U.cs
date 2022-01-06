@@ -22,5 +22,14 @@ namespace RiscV.Test
             Assert.Equal(RegisterAddressRV32I.R17, c.DestinationRegister);
             AssertEqualBinary(0b10101010101010101010u, c.ImmediateValue);
         }
+
+        [Fact]
+        public void AuiPC()
+        {
+            var c = Decode(0b10101010101010101010_10001_0010111u);
+            //               immediate            dest  opcode
+            Assert.Equal(RegisterAddressRV32I.R17, c.DestinationRegister);
+            AssertEqualBinary(0b10101010101010101010u, c.ImmediateValue);
+        }
     }
 }

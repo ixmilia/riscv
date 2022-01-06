@@ -18,9 +18,19 @@ namespace RiscV.Test
         public void Lui()
         {
             var e = CreateExecutionState();
-            var i = IInstructionRV32I.Lui(RegisterAddressRV32I.R17, 0b101010101010101011);
+            var i = IInstructionRV32I.Lui(RegisterAddressRV32I.R17, 0b1010_10101010_10101011);
             e.Execute(i);
-            AssertEqualBinary(0b101010101010101011000000000000u, e.X17);
+            AssertEqualBinary(0b10101010_10101010_10110000_00000000u, e.X17);
+        }
+
+        [Fact]
+        public void AuiPC()
+        {
+            var e = CreateExecutionState();
+            e.CurrentAddress = 0b0111;
+            var i = IInstructionRV32I.AuiPC(RegisterAddressRV32I.R17, 0b10101010101010101011);
+            e.Execute(i);
+            AssertEqualBinary(0b10101010_10101010_10110000_00000111u, e.X17);
         }
     }
 }

@@ -3,6 +3,7 @@
     public struct InstructionRV32I_U : IInstructionRV32I
     {
         public const uint LuiOpCode = 0b0110111;
+        public const uint AuiPCOpCode = 0b0010111;
 
         public uint Code { get; internal set; }
 
@@ -36,6 +37,7 @@
             switch (((IInstructionRV32I)i).OpCode)
             {
                 case LuiOpCode:
+                case AuiPCOpCode:
                     // perfectly fine function
                     break;
                 default:
@@ -58,12 +60,17 @@
 
         public static InstructionRV32I_U Lui(RegisterAddressRV32I destination, uint immediate) => CreateInstruction(LuiOpCode, destination, immediate);
 
+        public static InstructionRV32I_U AuiPC(RegisterAddressRV32I destination, uint immediate) => CreateInstruction(AuiPCOpCode, destination, immediate);
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch (((IInstructionRV32I)this).OpCode)
             {
                 case LuiOpCode:
                     executionState.SetRegisterValue(DestinationRegister, ImmediateValue << 12);
+                    break;
+                case AuiPCOpCode:
+                    executionState.SetRegisterValue(DestinationRegister, executionState.CurrentAddress + (ImmediateValue << 12));
                     break;
                 default:
                     throw new NotImplementedException();

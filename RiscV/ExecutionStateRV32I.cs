@@ -2,6 +2,8 @@
 {
     public partial class ExecutionStateRV32I
     {
+        public uint CurrentAddress { get; internal set; }
+
         public uint PC { get; internal set; }
 
         private uint[] _registers = new uint[32];
