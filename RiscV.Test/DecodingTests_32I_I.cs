@@ -25,5 +25,15 @@ namespace RiscV.Test
             Assert.Equal(-4, c.ImmediateValue);
             Assert.Equal(RegisterAddressRV32I.R17, c.DestinationRegister);
         }
+
+        [Fact]
+        public void SltIU()
+        {
+            var c = Decode(0b111111111100_00010_011_10001_0110011u);
+            //               immediate    rs1   f3  dest  opcode
+            Assert.Equal(RegisterAddressRV32I.R2, c.SourceRegister1);
+            Assert.Equal(4092u, c.ImmediateValueUnsigned);
+            Assert.Equal(RegisterAddressRV32I.R17, c.DestinationRegister);
+        }
     }
 }
