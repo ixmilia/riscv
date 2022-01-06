@@ -8,6 +8,7 @@
         public const uint SltIFunct3 = 0b010;
         public const uint SltIUFunct3 = 0b011;
         public const uint AndIFunct3 = 0b111;
+        public const uint OrIFunct3 = 0b110;
 
         public uint Code { get; internal set; }
 
@@ -75,6 +76,7 @@
                 case SltIFunct3:
                 case SltIUFunct3:
                 case AndIFunct3:
+                case OrIFunct3:
                     // perfectly fine function
                     break;
                 default:
@@ -114,6 +116,8 @@
 
         public static InstructionRV32I_I AndI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(destination, source1, AndIFunct3, immediateValue);
 
+        public static InstructionRV32I_I OrI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(destination, source1, OrIFunct3, immediateValue);
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch (Function3)
@@ -129,6 +133,9 @@
                     break;
                 case AndIFunct3:
                     executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) & ImmediateValue));
+                    break;
+                case OrIFunct3:
+                    executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) | ImmediateValue));
                     break;
                 default:
                     throw new NotImplementedException();
