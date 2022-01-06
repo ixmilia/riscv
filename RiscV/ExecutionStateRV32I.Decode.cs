@@ -11,6 +11,8 @@
                     return InstructionRV32I_I.Decode(code);
                 case InstructionRV32I_R.OpCode:
                     return InstructionRV32I_R.Decode(code);
+                case InstructionRV32I_U.LuiOpCode:
+                    return InstructionRV32I_U.Decode(code);
                 default:
                     throw new NotImplementedException();
             }
