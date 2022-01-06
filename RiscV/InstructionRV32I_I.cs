@@ -98,7 +98,14 @@
         {
             if (destination == RegisterAddressRV32I.R0)
             {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
+                if (source1 == RegisterAddressRV32I.R0 && immediateValue == 0)
+                {
+                    // nop
+                }
+                else
+                {
+                    throw new InvalidOperationException("R0 cannot be used as the destination");
+                }
             }
 
             var i = new InstructionRV32I_I(destination, funct3, source1, immediateValue);
@@ -134,12 +141,23 @@
 
         public static InstructionRV32I_I SraI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(destination, source1, SraIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5) | 0b010000000000);
 
+        public static InstructionRV32I_I Nop() => CreateInstruction(RegisterAddressRV32I.R0, RegisterAddressRV32I.R0, AddIFunct3, 0);
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch (Function3)
             {
                 case AddIFunct3:
-                    executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue));
+                    if (DestinationRegister == RegisterAddressRV32I.R0 &&
+                        SourceRegister1 == RegisterAddressRV32I.R0 &&
+                        ImmediateValue == 0)
+                    {
+                        // nop
+                    }
+                    else
+                    {
+                        executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue));
+                    }
                     break;
                 case SltIFunct3:
                     executionState.SetRegisterValue(DestinationRegister, (int)executionState.GetRegisterValue(SourceRegister1) < ImmediateValue ? 1u : 0);

@@ -83,5 +83,13 @@ namespace RiscV.Test
             AssertEqualBinary(0b0100000_00010_00010_101_10001_0010011u, i.Code);
             //                   flag   shamt rs1   f3  dest  opcode
         }
+
+        [Fact]
+        public void Nop()
+        {
+            var i = InstructionRV32I_I.Nop();
+            AssertEqualBinary(0b000000000000_00000_000_00000_0010011u, i.Code);
+            //                  immediate    rs1   f3  dest  opcode
+        }
     }
 }

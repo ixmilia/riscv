@@ -103,5 +103,15 @@ namespace RiscV.Test
             e.Execute(i);
             AssertEqualBinary(0b11111111_11111111_11111111_11111110u, e.X17);
         }
+
+        [Fact]
+        public void Nop()
+        {
+            var e = CreateExecutionState();
+            var i = IInstructionRV32I.Nop();
+            Assert.Equal(0u, e.CurrentAddress);
+            e.Execute(i);
+            Assert.Equal(4u, e.CurrentAddress);
+        }
     }
 }

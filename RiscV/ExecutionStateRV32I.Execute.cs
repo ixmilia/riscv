@@ -18,6 +18,8 @@
                 default:
                     throw new NotImplementedException();
             }
+
+            CurrentAddress += 4;
         }
     }
 }
