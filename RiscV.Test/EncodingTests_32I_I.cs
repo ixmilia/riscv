@@ -35,5 +35,13 @@ namespace RiscV.Test
             AssertEqualBinary(0b000000000100_00010_011_10001_0010011u, i.Code);
             //                  immediate    rs1   f3  dest  opcode
         }
+
+        [Fact]
+        public void AndI()
+        {
+            var i = InstructionRV32I_I.AndI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, -4);
+            AssertEqualBinary(0b111111111100_00010_111_10001_0010011u, i.Code);
+            //                  immediate    rs1   f3  dest  opcode
+        }
     }
 }
