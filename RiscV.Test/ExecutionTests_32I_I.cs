@@ -83,5 +83,15 @@ namespace RiscV.Test
             e.Execute(i);
             AssertEqualBinary(0b00000000_00000000_00000000_00011100u, e.X17);
         }
+
+        [Fact]
+        public void SrlI()
+        {
+            var e = CreateExecutionState();
+            e.X2 = 0b0111;
+            var i = IInstructionRV32I.SrlI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 2);
+            e.Execute(i);
+            AssertEqualBinary(0b00000000_00000000_00000000_00000001u, e.X17);
+        }
     }
 }

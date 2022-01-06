@@ -11,6 +11,7 @@
         public const uint OrIFunct3 = 0b110;
         public const uint XorIFunct3 = 0b100;
         public const uint SllIFunct3 = 0b001;
+        public const uint SrlIFunct3 = 0b101;
 
         public uint Code { get; internal set; }
 
@@ -81,6 +82,7 @@
                 case OrIFunct3:
                 case XorIFunct3:
                 case SllIFunct3:
+                case SrlIFunct3:
                     // perfectly fine function
                     break;
                 default:
@@ -126,6 +128,8 @@
 
         public static InstructionRV32I_I SllI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(destination, source1, SllIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5));
 
+        public static InstructionRV32I_I SrlI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(destination, source1, SrlIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5));
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch (Function3)
@@ -150,6 +154,9 @@
                     break;
                 case SllIFunct3:
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) << ImmediateValue);
+                    break;
+                case SrlIFunct3:
+                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) >> ImmediateValue);
                     break;
                 default:
                     throw new NotImplementedException();
