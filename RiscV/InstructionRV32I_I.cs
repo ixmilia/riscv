@@ -5,6 +5,7 @@
         public const uint OpCode = 0b0010011;
 
         public const uint AddIFunct3 = 0b000;
+        public const uint SltIFunct3 = 0b010;
 
         public uint Code { get; internal set; }
 
@@ -52,6 +53,7 @@
             switch (i.Function3)
             {
                 case AddIFunct3:
+                case SltIFunct3:
                     // perfectly fine function
                     break;
                 default:
@@ -74,12 +76,17 @@
 
         public static InstructionRV32I_I AddI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(destination, source1, AddIFunct3, immediateValue);
 
+        public static InstructionRV32I_I SltI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(destination, source1, SltIFunct3, immediateValue);
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch (Function3)
             {
                 case AddIFunct3:
-                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) + (uint)ImmediateValue);
+                    executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue));
+                    break;
+                case SltIFunct3:
+                    executionState.SetRegisterValue(DestinationRegister, (int)executionState.GetRegisterValue(SourceRegister1) < ImmediateValue ? 1u : 0);
                     break;
                 default:
                     throw new NotImplementedException();
