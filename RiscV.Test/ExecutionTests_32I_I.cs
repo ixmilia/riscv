@@ -93,5 +93,15 @@ namespace RiscV.Test
             e.Execute(i);
             AssertEqualBinary(0b00000000_00000000_00000000_00000001u, e.X17);
         }
+
+        [Fact]
+        public void SraI()
+        {
+            var e = CreateExecutionState();
+            e.X2 = 0b11111111_11111111_11111111_11111100; // -4
+            var i = IInstructionRV32I.SraI(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 1);
+            e.Execute(i);
+            AssertEqualBinary(0b11111111_11111111_11111111_11111110u, e.X17);
+        }
     }
 }

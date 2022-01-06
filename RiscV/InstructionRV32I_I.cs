@@ -12,6 +12,7 @@
         public const uint XorIFunct3 = 0b100;
         public const uint SllIFunct3 = 0b001;
         public const uint SrlIFunct3 = 0b101;
+        public const uint SraIFunct3 = 0b101;
 
         public uint Code { get; internal set; }
 
@@ -83,6 +84,7 @@
                 case XorIFunct3:
                 case SllIFunct3:
                 case SrlIFunct3:
+                //case SraIFunct3:
                     // perfectly fine function
                     break;
                 default:
@@ -130,6 +132,8 @@
 
         public static InstructionRV32I_I SrlI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(destination, source1, SrlIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5));
 
+        public static InstructionRV32I_I SraI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(destination, source1, SraIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5) | 0b010000000000);
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch (Function3)
@@ -156,7 +160,14 @@
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) << ImmediateValue);
                     break;
                 case SrlIFunct3:
-                    executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) >> ImmediateValue);
+                    if (BitMaskHelpers.GetBitsUint(ImmediateValueUnsigned, 10, 1) == 0)
+                    {
+                        executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) >> ImmediateValue);
+                    }
+                    else
+                    {
+                        executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) >> (int)BitMaskHelpers.GetBitsUint(ImmediateValueUnsigned, 0, 5)));
+                    }
                     break;
                 default:
                     throw new NotImplementedException();
