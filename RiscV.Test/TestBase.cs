@@ -5,6 +5,8 @@ namespace RiscV.Test
 {
     public abstract class TestBase
     {
+        protected static ExecutionStateRV32I CreateExecutionState() => new ExecutionStateRV32I();
+
         protected static string Intersperse(string s, char c, params int[] indicies)
         {
             var sb = new StringBuilder();

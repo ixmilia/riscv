@@ -2,11 +2,11 @@
 {
     public partial class ExecutionStateRV32I
     {
-        public uint CurrentAddress { get; internal set; }
-
         public uint PC { get; internal set; }
 
         private uint[] _registers = new uint[32];
+
+        private List<IMemorySegmentRV32> _memorySegments = new List<IMemorySegmentRV32>();
 
         public uint X0 => GetRegisterValue(RegisterAddressRV32I.R0);
 
@@ -211,6 +211,53 @@
 
             var index = (int)register;
             _registers[index] = value;
+        }
+
+        public byte ReadByte(uint address)
+        {
+            var ms = GetMemorySegmentFromAddress(address);
+            if (ms == null)
+            {
+                throw new Exception("TODO: handle it");
+            }
+
+            var result = ms.ReadByte(address);
+            return result;
+        }
+
+        public uint ReadUInt(uint address)
+        {
+            var b1 = ReadByte(address);
+            var b2 = ReadByte(address + 1);
+            var b3 = ReadByte(address + 2);
+            var b4 = ReadByte(address + 3);
+            var result = ByteHelpers.UIntFromBytes(b1, b2, b3, b4);
+            return result;
+        }
+
+        public void AddMemorySegment(IMemorySegmentRV32 ms)
+        {
+            var start = ms.BaseAddress;
+            var end = ms.BaseAddress + ms.Size;
+            if (_memorySegments.Any(ms => ms.ContainsAddress(ms.BaseAddress) || ms.ContainsAddress(ms.BaseAddress + ms.Size)))
+            {
+                throw new NotSupportedException("memory segment overlap");
+            }
+
+            _memorySegments.Add(ms);
+        }
+
+        public IMemorySegmentRV32? GetMemorySegmentFromAddress(uint address)
+        {
+            foreach (var ms in _memorySegments)
+            {
+                if (ms.ContainsAddress(address))
+                {
+                    return ms;
+                }
+            }
+
+            return null;
         }
     }
 }

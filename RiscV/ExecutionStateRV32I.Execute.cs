@@ -2,6 +2,13 @@
 {
     public partial class ExecutionStateRV32I
     {
+        public void ExecuteCurrent()
+        {
+            var ic = ReadUInt(PC);
+            var i = Decode(ic);
+            Execute(i);
+        }
+
         public void Execute(IInstructionRV32I instruction)
         {
             switch (instruction)
@@ -19,7 +26,7 @@
                     throw new NotImplementedException();
             }
 
-            CurrentAddress += 4;
+            PC += 4;
         }
     }
 }

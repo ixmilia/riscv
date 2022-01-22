@@ -109,9 +109,9 @@ namespace RiscV.Test
         {
             var e = CreateExecutionState();
             var i = IInstructionRV32I.Nop();
-            Assert.Equal(0u, e.CurrentAddress);
+            Assert.Equal(0u, e.PC);
             e.Execute(i);
-            Assert.Equal(4u, e.CurrentAddress);
+            Assert.Equal(4u, e.PC);
         }
     }
 }

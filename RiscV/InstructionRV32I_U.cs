@@ -70,7 +70,7 @@
                     executionState.SetRegisterValue(DestinationRegister, ImmediateValue << 12);
                     break;
                 case AuiPCOpCode:
-                    executionState.SetRegisterValue(DestinationRegister, executionState.CurrentAddress + (ImmediateValue << 12));
+                    executionState.SetRegisterValue(DestinationRegister, executionState.PC + (ImmediateValue << 12));
                     break;
                 default:
                     throw new NotImplementedException();
