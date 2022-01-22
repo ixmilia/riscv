@@ -4,14 +4,25 @@ namespace RiscV.Test
 {
     public class ExecutionTests_32I_I : TestBase
     {
-        private static ExecutionStateRV32I CreateExecutionState() => new ExecutionStateRV32I();
-
         protected static void AssertEqualBinary(uint expected, uint actual)
         {
             var indices = new[] { 8, 16, 24 };
             var expectedS = AsBinary(expected, indices);
             var actualS = AsBinary(actual, indices);
             Assert.Equal(expectedS, actualS);
+        }
+
+        [Fact]
+        public void LW()
+        {
+            var e = CreateExecutionState();
+            var m = new ByteMemorySegmentRV32(128, 0);
+            m.WriteUInt(6u, 0x12345678);
+            e.AddMemorySegment(m);
+            e.X2 = 2;
+            var i = IInstructionRV32I.LW(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 4);
+            e.Execute(i);
+            AssertEqualBinary(0x12345678, e.X17);
         }
 
         [Fact]

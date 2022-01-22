@@ -6,6 +6,7 @@
 
         public uint OpCode => BitMaskHelpers.GetBitsUint(Code, 0, 7);
 
+        public static IInstructionRV32I LW(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediate) => InstructionRV32I_I.LW(destination, source1, immediate);
         public static IInstructionRV32I AddI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediate) => InstructionRV32I_I.AddI(destination, source1, immediate);
         public static IInstructionRV32I SltI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediate) => InstructionRV32I_I.SltI(destination, source1, immediate);
         public static IInstructionRV32I SltIU(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint immediate) => InstructionRV32I_I.SltIU(destination, source1, immediate);

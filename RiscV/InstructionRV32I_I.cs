@@ -2,7 +2,10 @@
 {
     public struct InstructionRV32I_I : IInstructionRV32I
     {
-        public const uint OpCode = 0b0010011;
+        public const uint LogicalOpCode = 0b0010011;
+        public const uint LoadOpCode = 0b0000011;
+
+        public const uint LWFunct3 = 0b010;
 
         public const uint AddIFunct3 = 0b000;
         public const uint SltIFunct3 = 0b010;
@@ -21,22 +24,22 @@
             Code = code;
         }
 
-        private InstructionRV32I_I(RegisterAddressRV32I destination, uint function3, RegisterAddressRV32I source1)
+        private InstructionRV32I_I(uint opCode, RegisterAddressRV32I destination, uint function3, RegisterAddressRV32I source1)
         {
-            Code = OpCode;
+            Code = opCode;
             DestinationRegister = destination;
             Function3 = function3;
             SourceRegister1 = source1;
         }
 
-        public InstructionRV32I_I(RegisterAddressRV32I destination, uint function3, RegisterAddressRV32I source1, int immediateValue)
-            : this(destination, function3, source1)
+        public InstructionRV32I_I(uint opCode, RegisterAddressRV32I destination, uint function3, RegisterAddressRV32I source1, int immediateValue)
+            : this(opCode, destination, function3, source1)
         {
             ImmediateValue = immediateValue;
         }
 
-        public InstructionRV32I_I(RegisterAddressRV32I destination, uint function3, RegisterAddressRV32I source1, uint immediateValue)
-            : this(destination, function3, source1)
+        public InstructionRV32I_I(uint opCode, RegisterAddressRV32I destination, uint function3, RegisterAddressRV32I source1, uint immediateValue)
+            : this(opCode, destination, function3, source1)
         {
             ImmediateValueUnsigned = immediateValue;
         }
@@ -74,16 +77,17 @@
         public static InstructionRV32I_I Decode(uint code)
         {
             var i = new InstructionRV32I_I(code);
-            switch (i.Function3)
+            switch (((IInstructionRV32I)i).OpCode, i.Function3)
             {
-                case AddIFunct3:
-                case SltIFunct3:
-                case SltIUFunct3:
-                case AndIFunct3:
-                case OrIFunct3:
-                case XorIFunct3:
-                case SllIFunct3:
-                case SrlIFunct3:
+                case (LoadOpCode, LWFunct3):
+                case (LogicalOpCode, AddIFunct3):
+                case (LogicalOpCode, SltIFunct3):
+                case (LogicalOpCode, SltIUFunct3):
+                case (LogicalOpCode, AndIFunct3):
+                case (LogicalOpCode, OrIFunct3):
+                case (LogicalOpCode, XorIFunct3):
+                case (LogicalOpCode, SllIFunct3):
+                case (LogicalOpCode, SrlIFunct3):
                 //case SraIFunct3:
                     // perfectly fine function
                     break;
@@ -94,7 +98,7 @@
             return i;
         }
 
-        private static InstructionRV32I_I CreateInstruction(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint funct3, int immediateValue)
+        private static InstructionRV32I_I CreateInstruction(uint opCode, RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint funct3, int immediateValue)
         {
             if (destination == RegisterAddressRV32I.R0)
             {
@@ -108,46 +112,51 @@
                 }
             }
 
-            var i = new InstructionRV32I_I(destination, funct3, source1, immediateValue);
+            var i = new InstructionRV32I_I(opCode, destination, funct3, source1, immediateValue);
             return i;
         }
 
-        private static InstructionRV32I_I CreateInstruction(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint funct3, uint immediateValue)
+        private static InstructionRV32I_I CreateInstruction(uint opCode, RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint funct3, uint immediateValue)
         {
             if (destination == RegisterAddressRV32I.R0)
             {
                 throw new InvalidOperationException("R0 cannot be used as the destination");
             }
 
-            var i = new InstructionRV32I_I(destination, funct3, source1, immediateValue);
+            var i = new InstructionRV32I_I(opCode, destination, funct3, source1, immediateValue);
             return i;
         }
 
-        public static InstructionRV32I_I AddI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(destination, source1, AddIFunct3, immediateValue);
+        public static InstructionRV32I_I LW(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LWFunct3, address);
 
-        public static InstructionRV32I_I SltI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(destination, source1, SltIFunct3, immediateValue);
+        public static InstructionRV32I_I AddI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(LogicalOpCode, destination, source1, AddIFunct3, immediateValue);
 
-        public static InstructionRV32I_I SltIU(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint immediateValue) => CreateInstruction(destination, source1, SltIUFunct3, immediateValue);
+        public static InstructionRV32I_I SltI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(LogicalOpCode, destination, source1, SltIFunct3, immediateValue);
 
-        public static InstructionRV32I_I AndI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(destination, source1, AndIFunct3, immediateValue);
+        public static InstructionRV32I_I SltIU(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint immediateValue) => CreateInstruction(LogicalOpCode, destination, source1, SltIUFunct3, immediateValue);
 
-        public static InstructionRV32I_I OrI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(destination, source1, OrIFunct3, immediateValue);
+        public static InstructionRV32I_I AndI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(LogicalOpCode, destination, source1, AndIFunct3, immediateValue);
 
-        public static InstructionRV32I_I XorI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(destination, source1, XorIFunct3, immediateValue);
+        public static InstructionRV32I_I OrI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(LogicalOpCode, destination, source1, OrIFunct3, immediateValue);
 
-        public static InstructionRV32I_I SllI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(destination, source1, SllIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5));
+        public static InstructionRV32I_I XorI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(LogicalOpCode, destination, source1, XorIFunct3, immediateValue);
 
-        public static InstructionRV32I_I SrlI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(destination, source1, SrlIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5));
+        public static InstructionRV32I_I SllI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(LogicalOpCode, destination, source1, SllIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5));
 
-        public static InstructionRV32I_I SraI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(destination, source1, SraIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5) | 0b010000000000);
+        public static InstructionRV32I_I SrlI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(LogicalOpCode, destination, source1, SrlIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5));
 
-        public static InstructionRV32I_I Nop() => CreateInstruction(RegisterAddressRV32I.R0, RegisterAddressRV32I.R0, AddIFunct3, 0);
+        public static InstructionRV32I_I SraI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(LogicalOpCode, destination, source1, SraIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5) | 0b010000000000);
+
+        public static InstructionRV32I_I Nop() => CreateInstruction(LogicalOpCode, RegisterAddressRV32I.R0, RegisterAddressRV32I.R0, AddIFunct3, 0);
 
         internal void Execute(ExecutionStateRV32I executionState)
         {
-            switch (Function3)
+            switch (((IInstructionRV32I)this).OpCode, Function3)
             {
-                case AddIFunct3:
+                case (LoadOpCode, LWFunct3):
+                    executionState.SetRegisterValue(DestinationRegister, executionState.ReadUInt((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)));
+                    break;
+                case (LogicalOpCode, AddIFunct3):
                     if (DestinationRegister == RegisterAddressRV32I.R0 &&
                         SourceRegister1 == RegisterAddressRV32I.R0 &&
                         ImmediateValue == 0)
@@ -159,25 +168,25 @@
                         executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue));
                     }
                     break;
-                case SltIFunct3:
+                case (LogicalOpCode, SltIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (int)executionState.GetRegisterValue(SourceRegister1) < ImmediateValue ? 1u : 0);
                     break;
-                case SltIUFunct3:
+                case (LogicalOpCode, SltIUFunct3):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) < ImmediateValueUnsigned ? 1u : 0);
                     break;
-                case AndIFunct3:
+                case (LogicalOpCode, AndIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) & ImmediateValue));
                     break;
-                case OrIFunct3:
+                case (LogicalOpCode, OrIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) | ImmediateValue));
                     break;
-                case XorIFunct3:
+                case (LogicalOpCode, XorIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) ^ ImmediateValue));
                     break;
-                case SllIFunct3:
+                case (LogicalOpCode, SllIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) << ImmediateValue);
                     break;
-                case SrlIFunct3:
+                case (LogicalOpCode, SrlIFunct3):
                     if (BitMaskHelpers.GetBitsUint(ImmediateValueUnsigned, 10, 1) == 0)
                     {
                         executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) >> ImmediateValue);
