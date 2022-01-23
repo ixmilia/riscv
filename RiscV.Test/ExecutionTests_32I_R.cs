@@ -4,8 +4,6 @@ namespace RiscV.Test
 {
     public class ExecutionTests_32I_R : TestBase
     {
-        private static ExecutionStateRV32I CreateExecutionState() => new ExecutionStateRV32I();
-
         protected static void AssertEqualBinary(uint expected, uint actual)
         {
             var indices = new[] { 8, 16, 24 };

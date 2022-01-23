@@ -235,6 +235,28 @@
             return result;
         }
 
+        public void WriteByte(uint address, byte value)
+        {
+            var ms = GetMemorySegmentFromAddress(address);
+            if (ms == null)
+            {
+                throw new Exception("TODO: handle it");
+            }
+
+            ms.WriteByte(address, value);
+        }
+
+        public void WriteUInt(uint address, uint value)
+        {
+            var ms = GetMemorySegmentFromAddress(address);
+            if (ms == null)
+            {
+                throw new Exception("TODO: handle it");
+            }
+
+            ms.WriteUInt(address, value);
+        }
+
         public void AddMemorySegment(IMemorySegmentRV32 ms)
         {
             var start = ms.BaseAddress;

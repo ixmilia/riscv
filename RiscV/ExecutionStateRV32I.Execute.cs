@@ -19,6 +19,9 @@
                 case InstructionRV32I_R ri:
                     ri.Execute(this);
                     break;
+                case InstructionRV32I_S si:
+                    si.Execute(this);
+                    break;
                 case InstructionRV32I_U ui:
                     ui.Execute(this);
                     break;
