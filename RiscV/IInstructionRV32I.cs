@@ -15,6 +15,7 @@
         public static IInstructionRV32I AndI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediate) => InstructionRV32I_I.AndI(destination, source1, immediate);
         public static IInstructionRV32I OrI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediate) => InstructionRV32I_I.OrI(destination, source1, immediate);
         public static IInstructionRV32I XorI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediate) => InstructionRV32I_I.XorI(destination, source1, immediate);
+        public static IInstructionRV32I Not(RegisterAddressRV32I destination, RegisterAddressRV32I source1) => InstructionRV32I_I.Not(destination, source1);
         public static IInstructionRV32I SllI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => InstructionRV32I_I.SllI(destination, source1, shiftAmount);
         public static IInstructionRV32I SrlI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => InstructionRV32I_I.SrlI(destination, source1, shiftAmount);
         public static IInstructionRV32I SraI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => InstructionRV32I_I.SraI(destination, source1, shiftAmount);

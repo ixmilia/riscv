@@ -141,6 +141,8 @@
 
         public static InstructionRV32I_I XorI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(LogicalOpCode, destination, source1, XorIFunct3, immediateValue);
 
+        public static InstructionRV32I_I Not(RegisterAddressRV32I destination, RegisterAddressRV32I source1) => CreateInstruction(LogicalOpCode, destination, source1, XorIFunct3, BitMaskHelpers.GetMask(32));
+
         public static InstructionRV32I_I SllI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(LogicalOpCode, destination, source1, SllIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5));
 
         public static InstructionRV32I_I SrlI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint shiftAmount) => CreateInstruction(LogicalOpCode, destination, source1, SrlIFunct3, BitMaskHelpers.GetBitsUint(shiftAmount, 0, 5));
