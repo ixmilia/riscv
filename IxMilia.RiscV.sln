@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32104.457
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IxMilia.RiscV", "IxMilia.RiscV\IxMilia.RiscV.csproj", "{058AFCEF-F594-4E06-A9B6-F2368B9EDC95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IxMilia.RiscV", "src\IxMilia.RiscV\IxMilia.RiscV.csproj", "{058AFCEF-F594-4E06-A9B6-F2368B9EDC95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IxMilia.RiscV.Test", "IxMilia.RiscV.Test\IxMilia.RiscV.Test.csproj", "{9EFC8F21-171D-4FC4-ABEF-7B5A4FA82CC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IxMilia.RiscV.Test", "src\IxMilia.RiscV.Test\IxMilia.RiscV.Test.csproj", "{9EFC8F21-171D-4FC4-ABEF-7B5A4FA82CC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
