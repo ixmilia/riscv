@@ -100,29 +100,12 @@
 
         private static InstructionRV32I_I CreateInstruction(uint opCode, RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint funct3, int immediateValue)
         {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                if (source1 == RegisterAddressRV32I.R0 && immediateValue == 0)
-                {
-                    // nop
-                }
-                else
-                {
-                    throw new InvalidOperationException("R0 cannot be used as the destination");
-                }
-            }
-
             var i = new InstructionRV32I_I(opCode, destination, funct3, source1, immediateValue);
             return i;
         }
 
         private static InstructionRV32I_I CreateInstruction(uint opCode, RegisterAddressRV32I destination, RegisterAddressRV32I source1, uint funct3, uint immediateValue)
         {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
-            }
-
             var i = new InstructionRV32I_I(opCode, destination, funct3, source1, immediateValue);
             return i;
         }
@@ -159,16 +142,7 @@
                     executionState.SetRegisterValue(DestinationRegister, executionState.ReadUInt((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)));
                     break;
                 case (LogicalOpCode, AddIFunct3):
-                    if (DestinationRegister == RegisterAddressRV32I.R0 &&
-                        SourceRegister1 == RegisterAddressRV32I.R0 &&
-                        ImmediateValue == 0)
-                    {
-                        // nop
-                    }
-                    else
-                    {
-                        executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue));
-                    }
+                    executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue));
                     break;
                 case (LogicalOpCode, SltIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (int)executionState.GetRegisterValue(SourceRegister1) < ImmediateValue ? 1u : 0);

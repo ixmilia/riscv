@@ -8,7 +8,11 @@
 
         private List<IMemorySegmentRV32> _memorySegments = new List<IMemorySegmentRV32>();
 
-        public uint X0 => GetRegisterValue(RegisterAddressRV32I.R0);
+        public uint X0
+        {
+            get => GetRegisterValue(RegisterAddressRV32I.R0);
+            set => SetRegisterValue(RegisterAddressRV32I.R0, value);
+        }
 
         public uint X1
         {
@@ -206,7 +210,8 @@
         {
             if (register == RegisterAddressRV32I.R0)
             {
-                throw new NotSupportedException();
+                // noop
+                return;
             }
 
             var index = (int)register;

@@ -107,11 +107,6 @@
 
         private static InstructionRV32I_R CreateInstruction(RegisterAddressRV32I destination, RegisterAddressRV32I source1, RegisterAddressRV32I source2, uint funct3, uint funct7)
         {
-            if (destination == RegisterAddressRV32I.R0)
-            {
-                throw new InvalidOperationException("R0 cannot be used as the destination");
-            }
-
             var i = new InstructionRV32I_R(destination, funct3, source1, source2, funct7);
             return i;
         }

@@ -5,6 +5,15 @@ namespace IxMilia.RiscV.Test
     public class LoadAndExecuteTests_32I : TestBase
     {
         [Fact]
+        public void AnyValueSetToRegister0IsDiscarded()
+        {
+            var e = CreateExecutionState();
+            var i = IInstructionRV32I.AddI(RegisterAddressRV32I.R0, RegisterAddressRV32I.R1, 4);
+            e.Execute(i);
+            Assert.Equal(0u, e.X0);
+        }
+
+        [Fact]
         public void PCIsIncrementedBy4AfterRegularInstruction()
         {
             var e = CreateExecutionState();
