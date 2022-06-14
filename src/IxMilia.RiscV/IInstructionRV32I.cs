@@ -34,5 +34,7 @@
 
         public static IInstructionRV32I Lui(RegisterAddressRV32I destination, uint immediate) => InstructionRV32I_U.Lui(destination, immediate);
         public static IInstructionRV32I AuiPC(RegisterAddressRV32I destination, uint immediate) => InstructionRV32I_U.AuiPC(destination, immediate);
+
+        public static IInstructionRV32I Jal(RegisterAddressRV32I destination, int addressOffset) => InstructionRV32I_J.Jal(destination, addressOffset);
     }
 }

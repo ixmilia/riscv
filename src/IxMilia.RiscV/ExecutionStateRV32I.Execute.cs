@@ -25,11 +25,12 @@
                 case InstructionRV32I_U ui:
                     ui.Execute(this);
                     break;
+                case InstructionRV32I_J ji:
+                    ji.Execute(this);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
-
-            PC += 4;
         }
     }
 }

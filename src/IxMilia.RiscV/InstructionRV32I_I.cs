@@ -175,6 +175,8 @@
                 default:
                     throw new NotImplementedException();
             }
+
+            executionState.PC += 4;
         }
     }
 }
