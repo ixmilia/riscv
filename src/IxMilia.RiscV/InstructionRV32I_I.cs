@@ -2,9 +2,11 @@
 {
     public struct InstructionRV32I_I : IInstructionRV32I
     {
+        public const uint JalrOpCode = 0b1101111;
         public const uint LogicalOpCode = 0b0010011;
         public const uint LoadOpCode = 0b0000011;
 
+        public const uint JalrFunct3 = 0b000;
         public const uint LWFunct3 = 0b010;
 
         public const uint AddIFunct3 = 0b000;
@@ -79,6 +81,7 @@
             var i = new InstructionRV32I_I(code);
             switch (((IInstructionRV32I)i).OpCode, i.Function3)
             {
+                case (JalrOpCode, JalrFunct3):
                 case (LoadOpCode, LWFunct3):
                 case (LogicalOpCode, AddIFunct3):
                 case (LogicalOpCode, SltIFunct3):
@@ -110,6 +113,8 @@
             return i;
         }
 
+        public static InstructionRV32I_I Jalr(RegisterAddressRV32I destination, RegisterAddressRV32I source, int offset) => CreateInstruction(JalrOpCode, destination, source, JalrFunct3, offset);
+
         public static InstructionRV32I_I LW(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LWFunct3, address);
 
         public static InstructionRV32I_I AddI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(LogicalOpCode, destination, source1, AddIFunct3, immediateValue);
@@ -138,29 +143,41 @@
         {
             switch (((IInstructionRV32I)this).OpCode, Function3)
             {
+                case (JalrOpCode, JalrFunct3):
+                    executionState.SetRegisterValue(DestinationRegister, executionState.PC + 4);
+                    executionState.PC = executionState.GetRegisterValue(SourceRegister1) + BitMaskHelpers.SetBitsUint((uint)(ImmediateValue << 20 >> 20), 0, 1, 0);
+                    break;
                 case (LoadOpCode, LWFunct3):
                     executionState.SetRegisterValue(DestinationRegister, executionState.ReadUInt((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)));
+                    executionState.PC += 4;
                     break;
                 case (LogicalOpCode, AddIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue));
+                    executionState.PC += 4;
                     break;
                 case (LogicalOpCode, SltIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (int)executionState.GetRegisterValue(SourceRegister1) < ImmediateValue ? 1u : 0);
+                    executionState.PC += 4;
                     break;
                 case (LogicalOpCode, SltIUFunct3):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) < ImmediateValueUnsigned ? 1u : 0);
+                    executionState.PC += 4;
                     break;
                 case (LogicalOpCode, AndIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) & ImmediateValue));
+                    executionState.PC += 4;
                     break;
                 case (LogicalOpCode, OrIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) | ImmediateValue));
+                    executionState.PC += 4;
                     break;
                 case (LogicalOpCode, XorIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) ^ ImmediateValue));
+                    executionState.PC += 4;
                     break;
                 case (LogicalOpCode, SllIFunct3):
                     executionState.SetRegisterValue(DestinationRegister, executionState.GetRegisterValue(SourceRegister1) << ImmediateValue);
+                    executionState.PC += 4;
                     break;
                 case (LogicalOpCode, SrlIFunct3):
                     if (BitMaskHelpers.GetBitsUint(ImmediateValueUnsigned, 10, 1) == 0)
@@ -171,12 +188,12 @@
                     {
                         executionState.SetRegisterValue(DestinationRegister, (uint)((int)executionState.GetRegisterValue(SourceRegister1) >> (int)BitMaskHelpers.GetBitsUint(ImmediateValueUnsigned, 0, 5)));
                     }
+
+                    executionState.PC += 4;
                     break;
                 default:
                     throw new NotImplementedException();
             }
-
-            executionState.PC += 4;
         }
     }
 }

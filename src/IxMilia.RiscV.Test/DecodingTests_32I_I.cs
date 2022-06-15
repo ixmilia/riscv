@@ -115,5 +115,15 @@ namespace IxMilia.RiscV.Test
             Assert.Equal(0b00000000_00000000_00000000_00000000u, c.ImmediateValueUnsigned);
             Assert.Equal(RegisterAddressRV32I.R0, c.DestinationRegister);
         }
+
+        [Fact]
+        public void Jalr()
+        {
+            var c = Decode(0b000000001111_00010_000_10001_1101111u);
+            //               immediate    rs1   f3  dest  opcode
+            Assert.Equal(RegisterAddressRV32I.R2, c.SourceRegister1);
+            Assert.Equal(15, c.ImmediateValue);
+            Assert.Equal(RegisterAddressRV32I.R17, c.DestinationRegister);
+        }
     }
 }

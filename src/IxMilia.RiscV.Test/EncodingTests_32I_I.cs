@@ -99,5 +99,13 @@ namespace IxMilia.RiscV.Test
             AssertEqualBinary(0b000000000000_00000_000_00000_0010011u, i.Code);
             //                  immediate    rs1   f3  dest  opcode
         }
+
+        [Fact]
+        public void Jalr()
+        {
+            var i = InstructionRV32I_I.Jalr(RegisterAddressRV32I.R2, RegisterAddressRV32I.R17, -4);
+            AssertEqualBinary(0b111111111100_10001_000_00010_1101111u, i.Code);
+            //                  immediate    rs1   f3  dest  opcode
+        }
     }
 }

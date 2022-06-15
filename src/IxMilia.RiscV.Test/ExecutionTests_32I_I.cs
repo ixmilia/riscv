@@ -124,5 +124,18 @@ namespace IxMilia.RiscV.Test
             e.Execute(i);
             Assert.Equal(4u, e.PC);
         }
+
+        [Fact]
+        public void Jalr()
+        {
+            var e = CreateExecutionState();
+            e.PC = 20;
+            e.X2 = 100;
+            e.X17 = 0;
+            var i = IInstructionRV32I.Jalr(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 15);
+            e.Execute(i);
+            Assert.Equal(114u, e.PC);
+            Assert.Equal(24u, e.X17);
+        }
     }
 }
