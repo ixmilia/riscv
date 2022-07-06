@@ -160,11 +160,11 @@
                     executionState.PC += 4;
                     break;
                 case (LoadOpCode, LHFunct3):
-                    executionState.SetRegisterValue(DestinationRegister, executionState.ReadUShort((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)));
+                    executionState.SetRegisterValue(DestinationRegister, (uint)executionState.ReadUShort((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)) << 16 >> 16);
                     executionState.PC += 4;
                     break;
                 case (LoadOpCode, LBFunct3):
-                    executionState.SetRegisterValue(DestinationRegister, executionState.ReadByte((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)));
+                    executionState.SetRegisterValue(DestinationRegister, (uint)executionState.ReadByte((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)) << 24 >> 24);
                     executionState.PC += 4;
                     break;
                 case (LogicalOpCode, AddIFunct3):
