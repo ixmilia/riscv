@@ -41,5 +41,6 @@
 
         public static IInstructionRV32I Beq(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => InstructionRV32I_B.Beq(source1, source2, immediate);
         public static IInstructionRV32I Bne(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => InstructionRV32I_B.Bne(source1, source2, immediate);
+        public static IInstructionRV32I Blt(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => InstructionRV32I_B.Blt(source1, source2, immediate);
     }
 }
