@@ -9,6 +9,7 @@
         public const uint JalrFunct3 = 0b000;
         public const uint LWFunct3 = 0b010;
         public const uint LHFunct3 = 0b001;
+        public const uint LHUFunct3 = 0b101;
         public const uint LBFunct3 = 0b000;
 
         public const uint AddIFunct3 = 0b000;
@@ -86,6 +87,7 @@
                 case (JalrOpCode, JalrFunct3):
                 case (LoadOpCode, LWFunct3):
                 case (LoadOpCode, LHFunct3):
+                case (LoadOpCode, LHUFunct3):
                 case (LoadOpCode, LBFunct3):
                 case (LogicalOpCode, AddIFunct3):
                 case (LogicalOpCode, SltIFunct3):
@@ -122,6 +124,8 @@
         public static InstructionRV32I_I LW(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LWFunct3, address);
 
         public static InstructionRV32I_I LH(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LHFunct3, address);
+
+        public static InstructionRV32I_I LHU(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LHUFunct3, address);
 
         public static InstructionRV32I_I LB(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LBFunct3, address);
 
@@ -161,6 +165,10 @@
                     break;
                 case (LoadOpCode, LHFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (uint)executionState.ReadUShort((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)) << 16 >> 16);
+                    executionState.PC += 4;
+                    break;
+                case (LoadOpCode, LHUFunct3):
+                    executionState.SetRegisterValue(DestinationRegister, executionState.ReadUShort((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)));
                     executionState.PC += 4;
                     break;
                 case (LoadOpCode, LBFunct3):

@@ -53,6 +53,14 @@ namespace IxMilia.RiscV.Test
         }
 
         [Fact]
+        public void LHU()
+        {
+            var i = InstructionRV32I_I.LHU(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, -4);
+            AssertEqualBinary(0b111111111100_00010_101_10001_0000011u, i.Code);
+            //                  immediate    rs1   f3  dest  opcode
+        }
+
+        [Fact]
         public void LB()
         {
             var i = InstructionRV32I_I.LB(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, -4);

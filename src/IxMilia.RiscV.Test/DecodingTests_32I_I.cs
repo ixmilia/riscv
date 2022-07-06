@@ -59,6 +59,16 @@ namespace IxMilia.RiscV.Test
         }
 
         [Fact]
+        public void LHU()
+        {
+            var c = Decode(0b111111111100_00010_101_10001_0000011u);
+            //               immediate    rs1   f3  dest  opcode
+            Assert.Equal(RegisterAddressRV32I.R2, c.SourceRegister1);
+            Assert.Equal(-4, c.ImmediateValue);
+            Assert.Equal(RegisterAddressRV32I.R17, c.DestinationRegister);
+        }
+
+        [Fact]
         public void LB()
         {
             var c = Decode(0b111111111100_00010_000_10001_0000011u);
