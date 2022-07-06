@@ -230,6 +230,14 @@
             return result;
         }
 
+        public ushort ReadUShort(uint address)
+        {
+            var b1 = ReadByte(address);
+            var b2 = ReadByte(address + 1);
+            var result = ByteHelpers.UShortFromBytes(b1, b2);
+            return result;
+        }
+
         public uint ReadUInt(uint address)
         {
             var b1 = ReadByte(address);
