@@ -39,6 +39,19 @@ namespace IxMilia.RiscV.Test
         }
 
         [Fact]
+        public void LB()
+        {
+            var e = CreateExecutionState();
+            var m = new ByteMemorySegmentRV32(128, 0);
+            m.WriteUInt(6u, 0x12345678);
+            e.AddMemorySegment(m);
+            e.X2 = 2;
+            var i = IInstructionRV32I.LB(RegisterAddressRV32I.R17, RegisterAddressRV32I.R2, 4);
+            e.Execute(i);
+            AssertEqualBinary(0x78, e.X17);
+        }
+
+        [Fact]
         public void AddI()
         {
             var e = CreateExecutionState();

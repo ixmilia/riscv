@@ -9,6 +9,7 @@
         public const uint JalrFunct3 = 0b000;
         public const uint LWFunct3 = 0b010;
         public const uint LHFunct3 = 0b001;
+        public const uint LBFunct3 = 0b000;
 
         public const uint AddIFunct3 = 0b000;
         public const uint SltIFunct3 = 0b010;
@@ -85,6 +86,7 @@
                 case (JalrOpCode, JalrFunct3):
                 case (LoadOpCode, LWFunct3):
                 case (LoadOpCode, LHFunct3):
+                case (LoadOpCode, LBFunct3):
                 case (LogicalOpCode, AddIFunct3):
                 case (LogicalOpCode, SltIFunct3):
                 case (LogicalOpCode, SltIUFunct3):
@@ -120,6 +122,8 @@
         public static InstructionRV32I_I LW(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LWFunct3, address);
 
         public static InstructionRV32I_I LH(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LHFunct3, address);
+
+        public static InstructionRV32I_I LB(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LBFunct3, address);
 
         public static InstructionRV32I_I AddI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(LogicalOpCode, destination, source1, AddIFunct3, immediateValue);
 
@@ -157,6 +161,10 @@
                     break;
                 case (LoadOpCode, LHFunct3):
                     executionState.SetRegisterValue(DestinationRegister, executionState.ReadUShort((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)));
+                    executionState.PC += 4;
+                    break;
+                case (LoadOpCode, LBFunct3):
+                    executionState.SetRegisterValue(DestinationRegister, executionState.ReadByte((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)));
                     executionState.PC += 4;
                     break;
                 case (LogicalOpCode, AddIFunct3):
