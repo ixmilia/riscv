@@ -45,5 +45,10 @@
         public static IInstructionRV32I BltU(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => InstructionRV32I_B.BltU(source1, source2, immediate);
         public static IInstructionRV32I Bge(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => InstructionRV32I_B.Bge(source1, source2, immediate);
         public static IInstructionRV32I BgeU(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => InstructionRV32I_B.BgeU(source1, source2, immediate);
+
+        public static IInstructionRV32I Bgt(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => Blt(source2, source1, immediate);
+        public static IInstructionRV32I BgtU(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => BltU(source2, source1, immediate);
+        public static IInstructionRV32I Ble(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => Bge(source2, source1, immediate);
+        public static IInstructionRV32I BleU(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => BgeU(source2, source1, immediate);
     }
 }
