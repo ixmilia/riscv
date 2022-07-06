@@ -10,6 +10,7 @@ namespace IxMilia.RiscV
         public const int BneFunct3 = 0b001;
         public const int BltFunct3 = 0b100;
         public const int BltUFunct3 = 0b110;
+        public const int BgeFunct3 = 0b101;
 
         public uint Code { get; internal set; }
 
@@ -76,6 +77,7 @@ namespace IxMilia.RiscV
                 case (BranchOpCode, BneFunct3):
                 case (BranchOpCode, BltFunct3):
                 case (BranchOpCode, BltUFunct3):
+                case (BranchOpCode, BgeFunct3):
                     // perfectly fine function
                     break;
                 default:
@@ -89,6 +91,7 @@ namespace IxMilia.RiscV
         public static InstructionRV32I_B Bne(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => new InstructionRV32I_B(BneFunct3, source1, source2, immediate);
         public static InstructionRV32I_B Blt(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => new InstructionRV32I_B(BltFunct3, source1, source2, immediate);
         public static InstructionRV32I_B BltU(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => new InstructionRV32I_B(BltUFunct3, source1, source2, immediate);
+        public static InstructionRV32I_B Bge(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => new InstructionRV32I_B(BgeFunct3, source1, source2, immediate);
 
         internal void Execute(ExecutionStateRV32I executionState)
         {
@@ -126,6 +129,16 @@ namespace IxMilia.RiscV
                     break;
                 case BltUFunct3:
                     if (executionState.GetRegisterValue(Source1) < executionState.GetRegisterValue(Source2))
+                    {
+                        executionState.PC = (uint)(executionState.PC + Immediate);
+                    }
+                    else
+                    {
+                        executionState.PC += 4;
+                    }
+                    break;
+                case BgeFunct3:
+                    if ((int)executionState.GetRegisterValue(Source1) >= (int)executionState.GetRegisterValue(Source2))
                     {
                         executionState.PC = (uint)(executionState.PC + Immediate);
                     }

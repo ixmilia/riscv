@@ -101,5 +101,14 @@ namespace IxMilia.RiscV.Test
             //                  imm12    rs2   rs1       imm41  opcode
             //                    imm105             funct3   imm11
         }
+
+        [Fact]
+        public void Bge_Funct3()
+        {
+            var i = InstructionRV32I_B.Bge(RegisterAddressRV32I.R0, RegisterAddressRV32I.R0, 0);
+            AssertEqualBinary(0b0_000000_00000_00000_101_0000_0_1100011u, i.Code);
+            //                  imm12    rs2   rs1       imm41  opcode
+            //                    imm105             funct3   imm11
+        }
     }
 }
