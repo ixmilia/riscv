@@ -13,6 +13,9 @@
         {
             switch (instruction)
             {
+                case InstructionRV32I_B bi:
+                    bi.Execute(this);
+                    break;
                 case InstructionRV32I_I ii:
                     ii.Execute(this);
                     break;

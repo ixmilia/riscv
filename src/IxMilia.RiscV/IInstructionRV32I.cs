@@ -38,5 +38,7 @@
         public static IInstructionRV32I Jal(RegisterAddressRV32I destination, int addressOffset) => InstructionRV32I_J.Jal(destination, addressOffset);
 
         public static IInstructionRV32I Jalr(RegisterAddressRV32I destination, RegisterAddressRV32I source, int offset) => InstructionRV32I_I.Jalr(destination, source, offset);
+
+        public static IInstructionRV32I Beq(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => InstructionRV32I_B.Beq(source1, source2, immediate);
     }
 }
