@@ -11,6 +11,7 @@
         public const uint LHFunct3 = 0b001;
         public const uint LHUFunct3 = 0b101;
         public const uint LBFunct3 = 0b000;
+        public const uint LBUFunct3 = 0b100;
 
         public const uint AddIFunct3 = 0b000;
         public const uint SltIFunct3 = 0b010;
@@ -89,6 +90,7 @@
                 case (LoadOpCode, LHFunct3):
                 case (LoadOpCode, LHUFunct3):
                 case (LoadOpCode, LBFunct3):
+                case (LoadOpCode, LBUFunct3):
                 case (LogicalOpCode, AddIFunct3):
                 case (LogicalOpCode, SltIFunct3):
                 case (LogicalOpCode, SltIUFunct3):
@@ -128,6 +130,8 @@
         public static InstructionRV32I_I LHU(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LHUFunct3, address);
 
         public static InstructionRV32I_I LB(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LBFunct3, address);
+
+        public static InstructionRV32I_I LBU(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int address) => CreateInstruction(LoadOpCode, destination, source1, LBUFunct3, address);
 
         public static InstructionRV32I_I AddI(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediateValue) => CreateInstruction(LogicalOpCode, destination, source1, AddIFunct3, immediateValue);
 
@@ -173,6 +177,10 @@
                     break;
                 case (LoadOpCode, LBFunct3):
                     executionState.SetRegisterValue(DestinationRegister, (uint)executionState.ReadByte((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)) << 24 >> 24);
+                    executionState.PC += 4;
+                    break;
+                case (LoadOpCode, LBUFunct3):
+                    executionState.SetRegisterValue(DestinationRegister, executionState.ReadByte((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)));
                     executionState.PC += 4;
                     break;
                 case (LogicalOpCode, AddIFunct3):
