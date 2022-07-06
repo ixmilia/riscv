@@ -86,5 +86,14 @@ namespace IxMilia.RiscV.Test
             //                 imm105             funct3   imm11
             // just by decoding we know it's good
         }
+
+        [Fact]
+        public void BltU_Funct3()
+        {
+            var c = Decode(0b0_000000_00000_00000_110_0000_0_1100011u);
+            //               imm12    rs2   rs1       imm41  opcode
+            //                 imm105             funct3   imm11
+            // just by decoding we know it's good
+        }
     }
 }
