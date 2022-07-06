@@ -6,6 +6,7 @@
 
         public const uint SwFunct3 = 0b010;
         public const uint ShFunct3 = 0b001;
+        public const uint SbFunct3 = 0b000;
 
         public uint Code { get; internal set; }
 
@@ -59,6 +60,7 @@
             var i = new InstructionRV32I_S(code);
             switch (i.Function3)
             {
+                case SbFunct3:
                 case ShFunct3:
                 case SwFunct3:
                     // perfectly fine function
@@ -80,10 +82,15 @@
 
         public static InstructionRV32I_S SH(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int offset) => CreateInstruction(ShFunct3, source1, source2, offset);
 
+        public static InstructionRV32I_S SB(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int offset) => CreateInstruction(SbFunct3, source1, source2, offset);
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch (Function3)
             {
+                case SbFunct3:
+                    executionState.WriteByte((uint)(executionState.GetRegisterValue(SourceRegister1) + ImmediateValue), (byte)executionState.GetRegisterValue(SourceRegister2));
+                    break;
                 case ShFunct3:
                     executionState.WriteUShort((uint)(executionState.GetRegisterValue(SourceRegister1) + ImmediateValue), (ushort)executionState.GetRegisterValue(SourceRegister2));
                     break;

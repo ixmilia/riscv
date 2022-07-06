@@ -8,6 +8,7 @@
 
         public static IInstructionRV32I SW(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int offset) => InstructionRV32I_S.SW(source1, source2, offset);
         public static IInstructionRV32I SH(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int offset) => InstructionRV32I_S.SH(source1, source2, offset);
+        public static IInstructionRV32I SB(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int offset) => InstructionRV32I_S.SB(source1, source2, offset);
 
         public static IInstructionRV32I LW(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediate) => InstructionRV32I_I.LW(destination, source1, immediate);
         public static IInstructionRV32I LH(RegisterAddressRV32I destination, RegisterAddressRV32I source1, int immediate) => InstructionRV32I_I.LH(destination, source1, immediate);
