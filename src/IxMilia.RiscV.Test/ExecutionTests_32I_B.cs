@@ -35,5 +35,29 @@ namespace IxMilia.RiscV.Test
             e.Execute(i);
             Assert.Equal(104u, e.PC);
         }
+
+        [Fact]
+        public void Bne_true()
+        {
+            var e = CreateExecutionState();
+            e.PC = 100;
+            e.X2 = 17;
+            e.X3 = 18;
+            var i = IInstructionRV32I.Bne(RegisterAddressRV32I.R2, RegisterAddressRV32I.R3, 22);
+            e.Execute(i);
+            Assert.Equal(122u, e.PC);
+        }
+
+        [Fact]
+        public void Bne_false()
+        {
+            var e = CreateExecutionState();
+            e.PC = 100;
+            e.X2 = 17;
+            e.X3 = 17;
+            var i = IInstructionRV32I.Bne(RegisterAddressRV32I.R2, RegisterAddressRV32I.R3, 22);
+            e.Execute(i);
+            Assert.Equal(104u, e.PC);
+        }
     }
 }
