@@ -42,7 +42,14 @@
 
         public int ImmediateValue
         {
-            get => ((int)((BitMaskHelpers.GetBitsUint(Code, 7, 5) | (BitMaskHelpers.GetBitsUint(Code, 25, 7) << 5))) << 20 >> 20);
+            get
+            {
+                var imm40 = BitMaskHelpers.GetBitsUint(Code, 7, 5);
+                var imm115 = BitMaskHelpers.GetBitsUint(Code, 25, 7);
+                var result = (int)((imm115 << 5) + imm40);
+                result = result << 20 >> 20;
+                return result;
+            }
             set => Code = BitMaskHelpers.SetBitsUint(BitMaskHelpers.SetBitsUint(Code, 7, 5, BitMaskHelpers.GetMask(5) & (uint)value), 25, 7, BitMaskHelpers.GetMask(7) & (uint)(value >> 5));
         }
 

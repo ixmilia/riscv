@@ -27,8 +27,8 @@
 
         public uint ImmediateValue
         {
-            get => BitMaskHelpers.GetBitsUint(Code, 12, 20);
-            set => Code = BitMaskHelpers.SetBitsUint(Code, 12, 20, value);
+            get => BitMaskHelpers.GetBitsUint(Code, 12, 20) << 12;
+            set => Code = BitMaskHelpers.SetBitsUint(Code, 12, 20, value >> 12);
         }
 
         public static InstructionRV32I_U Decode(uint code)
@@ -62,10 +62,10 @@
             switch (((IInstructionRV32I)this).OpCode)
             {
                 case LuiOpCode:
-                    executionState.SetRegisterValue(DestinationRegister, ImmediateValue << 12);
+                    executionState.SetRegisterValue(DestinationRegister, ImmediateValue);
                     break;
                 case AuiPCOpCode:
-                    executionState.SetRegisterValue(DestinationRegister, executionState.PC + (ImmediateValue << 12));
+                    executionState.SetRegisterValue(DestinationRegister, executionState.PC + ImmediateValue);
                     break;
                 default:
                     throw new NotImplementedException();

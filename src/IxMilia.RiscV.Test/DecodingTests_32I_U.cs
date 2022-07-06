@@ -15,12 +15,28 @@ namespace IxMilia.RiscV.Test
         }
 
         [Fact]
+        public void U_rd()
+        {
+            var c = Decode(0b00000000000000000000_11111_0110111u);
+            //               immediate            dest  opcode
+            Assert.Equal(RegisterAddressRV32I.R31, c.DestinationRegister);
+        }
+
+        [Fact]
+        public void U_Immediate_31_12()
+        {
+            var c = Decode(0b11111111111111111111_00000_0110111u);
+            //               immediate            dest  opcode
+            AssertEqualBinary(0b11111111111111111111000000000000u, c.ImmediateValue);
+        }
+
+        [Fact]
         public void Lui()
         {
             var c = Decode(0b10101010101010101010_10001_0110111u);
             //               immediate            dest  opcode
             Assert.Equal(RegisterAddressRV32I.R17, c.DestinationRegister);
-            AssertEqualBinary(0b10101010101010101010u, c.ImmediateValue);
+            AssertEqualBinary(0b10101010101010101010000000000000u, c.ImmediateValue);
         }
 
         [Fact]
@@ -29,7 +45,7 @@ namespace IxMilia.RiscV.Test
             var c = Decode(0b10101010101010101010_10001_0010111u);
             //               immediate            dest  opcode
             Assert.Equal(RegisterAddressRV32I.R17, c.DestinationRegister);
-            AssertEqualBinary(0b10101010101010101010u, c.ImmediateValue);
+            AssertEqualBinary(0b10101010101010101010000000000000u, c.ImmediateValue);
         }
     }
 }

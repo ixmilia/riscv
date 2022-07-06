@@ -33,12 +33,12 @@
                 var imm_19_12 = BitMaskHelpers.GetBitsUint(Code, 12, 8);
                 var imm_20 = BitMaskHelpers.GetBitsUint(Code, 31, 1);
                 var result = (int)((imm_20 << 20) + (imm_19_12 << 12) + (imm_11 << 11) + (imm_10_1 << 1));
-                result = result << 12 >> 12;
+                result = result << 11 >> 11;
                 return result;
             }
             set
             {
-                var v = (uint)((value << 12) >> 12);
+                var v = (uint)((value << 11) >> 11);
                 Code = BitMaskHelpers.SetBitsUint(Code, 21, 10, v >> 1);
                 Code = BitMaskHelpers.SetBitsUint(Code, 20, 1, v >> 11);
                 Code = BitMaskHelpers.SetBitsUint(Code, 12, 8, v >> 12);

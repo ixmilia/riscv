@@ -8,6 +8,30 @@ namespace IxMilia.RiscV.Test
         private static InstructionRV32I_R Decode(uint code) => InstructionRV32I_R.Decode(code);
 
         [Fact]
+        public void R_rd()
+        {
+            var c = Decode(0b0000000_00000_00000_000_11111_0110011u);
+            //               funct7  rs2   rs1   f3  rd    opcode
+            Assert.Equal(RegisterAddressRV32I.R31, c.DestinationRegister);
+        }
+
+        [Fact]
+        public void R_rs1()
+        {
+            var c = Decode(0b0000000_00000_11111_000_00000_0110011u);
+            //               funct7  rs2   rs1   f3  rd    opcode
+            Assert.Equal(RegisterAddressRV32I.R31, c.SourceRegister1);
+        }
+
+        [Fact]
+        public void R_rs2()
+        {
+            var c = Decode(0b0000000_11111_00000_000_00000_0110011u);
+            //               funct7  rs2   rs1   f3  rd    opcode
+            Assert.Equal(RegisterAddressRV32I.R31, c.SourceRegister2);
+        }
+
+        [Fact]
         public void Add()
         {
             var c = Decode(0b0000000_00100_00010_000_10001_0110011u);

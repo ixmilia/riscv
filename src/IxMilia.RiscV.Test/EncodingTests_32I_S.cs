@@ -13,6 +13,38 @@ namespace IxMilia.RiscV.Test
         }
 
         [Fact]
+        public void S_rs1()
+        {
+            var i = InstructionRV32I_S.SW(RegisterAddressRV32I.R31, RegisterAddressRV32I.R0, 0);
+            AssertEqualBinary(0b0000000_00000_11111_010_00000_0100011u, i.Code);
+            //                  imm110  rs2   rs1   f3  imm40  opcode
+        }
+
+        [Fact]
+        public void S_rs2()
+        {
+            var i = InstructionRV32I_S.SW(RegisterAddressRV32I.R0, RegisterAddressRV32I.R31, 0);
+            AssertEqualBinary(0b0000000_11111_00000_010_00000_0100011u, i.Code);
+            //                  imm110  rs2   rs1   f3  imm40  opcode
+        }
+
+        [Fact]
+        public void S_Immediate_4_0()
+        {
+            var i = InstructionRV32I_S.SW(RegisterAddressRV32I.R0, RegisterAddressRV32I.R0, 0b11111);
+            AssertEqualBinary(0b0000000_00000_00000_010_11111_0100011u, i.Code);
+            //                  imm110  rs2   rs1   f3  imm40  opcode
+        }
+
+        [Fact]
+        public void S_Immediate_11_5()
+        {
+            var i = InstructionRV32I_S.SW(RegisterAddressRV32I.R0, RegisterAddressRV32I.R0, 0b111111100000);
+            AssertEqualBinary(0b1111111_00000_00000_010_00000_0100011u, i.Code);
+            //                  imm110  rs2   rs1   f3  imm40  opcode
+        }
+
+        [Fact]
         public void SW()
         {
             var i = InstructionRV32I_S.SW(RegisterAddressRV32I.R2, RegisterAddressRV32I.R4, 0b1100011_10101);
