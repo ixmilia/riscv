@@ -25,6 +25,14 @@
             return result;
         }
 
+        public static void WriteUShort(this IMemorySegmentRV32 ms, uint address, ushort value)
+        {
+            var b1 = (byte)(value & 0xFF);
+            var b2 = (byte)((value >> 8) & 0xFF);
+            ms.WriteByte(address, b1);
+            ms.WriteByte(address + 1, b2);
+        }
+
         public static void WriteUInt(this IMemorySegmentRV32 ms, uint address, uint value)
         {
             var b1 = (byte)(value & 0xFF);

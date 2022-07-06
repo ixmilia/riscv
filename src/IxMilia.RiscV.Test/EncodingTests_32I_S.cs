@@ -51,5 +51,13 @@ namespace IxMilia.RiscV.Test
             AssertEqualBinary(0b1100011_00100_00010_010_10101_0100011u, i.Code);
             //                  imm110  rs2   rs1   f3  imm40  opcode
         }
+
+        [Fact]
+        public void SH()
+        {
+            var i = InstructionRV32I_S.SH(RegisterAddressRV32I.R2, RegisterAddressRV32I.R4, 0b1100011_10101);
+            AssertEqualBinary(0b1100011_00100_00010_001_10101_0100011u, i.Code);
+            //                  imm110  rs2   rs1   f3  imm40  opcode
+        }
     }
 }

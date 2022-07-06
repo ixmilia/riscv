@@ -49,5 +49,17 @@ namespace IxMilia.RiscV.Test
             //                     sign extension
             Assert.Equal((int)expected, c.ImmediateValue);
         }
+
+        [Fact]
+        public void SH()
+        {
+            var c = Decode(0b1100011_00100_00010_001_10101_0100011u);
+            //               imm115  rs2   rs1   f3  imm40 opcode
+            Assert.Equal(RegisterAddressRV32I.R2, c.SourceRegister1);
+            Assert.Equal(RegisterAddressRV32I.R4, c.SourceRegister2);
+            var expected = 0b11111111111111111111_1100011_10101u;
+            //                     sign extension
+            Assert.Equal((int)expected, c.ImmediateValue);
+        }
     }
 }

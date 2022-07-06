@@ -25,5 +25,19 @@ namespace IxMilia.RiscV.Test
             var actual = m.ReadUInt(6);
             AssertEqualBinary(0b1100011_10101, actual);
         }
+
+        [Fact]
+        public void SH()
+        {
+            var e = CreateExecutionState();
+            var m = new ByteMemorySegmentRV32(32, 0);
+            e.AddMemorySegment(m);
+            e.X2 = 10;
+            e.X4 = 0xFFFFFFFF;
+            var i = IInstructionRV32I.SH(RegisterAddressRV32I.R2, RegisterAddressRV32I.R4, -4);
+            e.Execute(i);
+            var actual = m.ReadUInt(6);
+            AssertEqualBinary(0xFFFF, actual);
+        }
     }
 }

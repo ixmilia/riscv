@@ -259,6 +259,17 @@
             ms.WriteByte(address, value);
         }
 
+        public void WriteUShort(uint address, ushort value)
+        {
+            var ms = GetMemorySegmentFromAddress(address);
+            if (ms == null)
+            {
+                throw new Exception("TODO: handle it");
+            }
+
+            ms.WriteUShort(address, value);
+        }
+
         public void WriteUInt(uint address, uint value)
         {
             var ms = GetMemorySegmentFromAddress(address);
