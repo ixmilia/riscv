@@ -161,7 +161,7 @@
             {
                 case (JalrOpCode, JalrFunct3):
                     executionState.SetRegisterValue(DestinationRegister, executionState.PC + 4);
-                    executionState.PC = executionState.GetRegisterValue(SourceRegister1) + BitMaskHelpers.SetBitsUint((uint)(ImmediateValue << 20 >> 20), 0, 1, 0);
+                    executionState.PC = BitMaskHelpers.SetBitsUint((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue), 0, 1, 0);
                     break;
                 case (LoadOpCode, LWFunct3):
                     executionState.SetRegisterValue(DestinationRegister, executionState.ReadUInt((uint)((int)executionState.GetRegisterValue(SourceRegister1) + ImmediateValue)));
