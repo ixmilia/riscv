@@ -1,4 +1,7 @@
-﻿namespace IxMilia.RiscV
+﻿using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
+
+namespace IxMilia.RiscV
 {
     public struct InstructionRV32I_R : IInstructionRV32I
     {
@@ -170,6 +173,55 @@
             }
 
             executionState.PC += 4;
+        }
+
+        public override string ToString()
+        {
+            var args = $"{DestinationRegister.ToDisplayString()}, {SourceRegister1.ToDisplayString()}, {SourceRegister2.ToDisplayString()}";
+            var name = (Function3, Function7) switch
+            {
+                (AddFunct3, AddFunct7) => $"add",
+                (SltFunct3, SltFunct7) => $"slt",
+                (SltuFunct3, SltuFunct7) => $"sltu",
+                (AndFunct3, AndFunct7) => $"and",
+                (OrFunct3, OrFunct7) => $"or",
+                (XorFunct3, XorFunct7) => $"xor",
+                (SllFunct3, SllFunct7) => $"sll",
+                (SrlFunct3, SrlFunct7) => $"srl",
+                (SubFunct3, SubFunct7) => $"sub",
+                (SraFunct3, SraFunct7) => $"sra",
+                _ => throw new NotImplementedException(),
+            };
+
+            return $"{name} {args}";
+        }
+
+        internal static bool TryParseRemainder(string instruction, string s, out InstructionRV32I_R result)
+        {
+            result = default;
+            var match = Regex.Match(s, @"\s*(?<destination>[^,]+), +(?<source1>[^,]+), +(?<source2>.+)\s*");
+            Func<RegisterAddressRV32I, RegisterAddressRV32I, RegisterAddressRV32I, InstructionRV32I_R>? creator = instruction switch
+            {
+                "add" => Add,
+                "slt" => Slt,
+                "sltu" => Sltu,
+                "and" => And,
+                "or" => Or,
+                "xor" => Xor,
+                "sll" => Sll,
+                "srl" => Srl,
+                "sub" => Sub,
+                "sra" => Sra,
+                _ => null,
+            };
+
+            if (creator is null)
+            {
+                return false;
+            }
+
+            result = creator(match.Groups["destination"].Value.ParseRegister(), match.Groups["source1"].Value.ParseRegister(), match.Groups["source2"].Value.ParseRegister());
+            return true;
         }
     }
 }

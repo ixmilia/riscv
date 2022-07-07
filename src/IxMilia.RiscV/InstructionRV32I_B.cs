@@ -195,10 +195,6 @@ namespace IxMilia.RiscV
                 return false;
             }
 
-            var source1 = parts[0].ParseRegister();
-            var source2 = parts[1].ParseRegister();
-            var offset = (int)parts[2].ParseNumber();
-
             Func<RegisterAddressRV32I, RegisterAddressRV32I, int, InstructionRV32I_B>? creator = instruction switch
             {
                 "beq" => Beq,
@@ -215,6 +211,10 @@ namespace IxMilia.RiscV
             {
                 return false;
             }
+
+            var source1 = parts[0].ParseRegister();
+            var source2 = parts[1].ParseRegister();
+            var offset = (int)parts[2].ParseNumber();
 
             result = creator(source1, source2, offset);
             return true;

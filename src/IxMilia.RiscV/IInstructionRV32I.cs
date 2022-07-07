@@ -84,6 +84,11 @@
                 return jResult;
             }
 
+            if (InstructionRV32I_R.TryParseRemainder(instructionName, remainder, out var rResult))
+            {
+                return rResult;
+            }
+
             throw new NotImplementedException();
         }
     }
