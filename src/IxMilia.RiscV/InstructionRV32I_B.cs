@@ -96,6 +96,11 @@ namespace IxMilia.RiscV
         public static InstructionRV32I_B Bge(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => new InstructionRV32I_B(BgeFunct3, source1, source2, immediate);
         public static InstructionRV32I_B BgeU(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => new InstructionRV32I_B(BgeUFunct3, source1, source2, immediate);
 
+        public static InstructionRV32I_B Bgt(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => Blt(source2, source1, immediate);
+        public static InstructionRV32I_B BgtU(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => BltU(source2, source1, immediate);
+        public static InstructionRV32I_B Ble(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => Bge(source2, source1, immediate);
+        public static InstructionRV32I_B BleU(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => BgeU(source2, source1, immediate);
+
         internal void Execute(ExecutionStateRV32I executionState)
         {
             switch (Function3)
@@ -163,6 +168,56 @@ namespace IxMilia.RiscV
                 default:
                     throw new NotSupportedException();
             }
+        }
+
+        public override string ToString()
+        {
+            var instructionName = Function3 switch
+            {
+                BeqFunct3 => "beq",
+                BneFunct3 => "bne",
+                BgeFunct3 => "bge",
+                BgeUFunct3 => "bgeu",
+                BltFunct3 => "blt",
+                BltUFunct3 => "bltu",
+                _ => throw new NotImplementedException()
+            };
+
+            return $"{instructionName} {Source1.ToDisplayString()}, {Source2.ToDisplayString()}, 0x{Immediate:X}";
+        }
+
+        internal static bool TryParseRemainder(string instruction, string s, out InstructionRV32I_B result)
+        {
+            result = default;
+            var parts = s.Split(',').Select(p => p.Trim()).ToArray();
+            if (parts.Length != 3)
+            {
+                return false;
+            }
+
+            var source1 = parts[0].ParseRegister();
+            var source2 = parts[1].ParseRegister();
+            var offset = (int)parts[2].ParseNumber();
+
+            Func<RegisterAddressRV32I, RegisterAddressRV32I, int, InstructionRV32I_B>? creator = instruction switch
+            {
+                "beq" => Beq,
+                "bne" => Bne,
+                "blt" => Blt,
+                "bltu" => BltU,
+                "bge" => Bge,
+                "bgeu" => BgeU,
+                "bgt" => Bgt,
+                _ => null,
+            };
+
+            if (creator is null)
+            {
+                return false;
+            }
+
+            result = creator(source1, source2, offset);
+            return true;
         }
     }
 }

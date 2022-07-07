@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Xunit;
 
 namespace IxMilia.RiscV.Test
 {
@@ -28,6 +29,15 @@ namespace IxMilia.RiscV.Test
             var prefix = new string('0', 32 - result.Length);
             var full = prefix + result;
             return Intersperse(full, '_', indicies);
+        }
+
+        protected static void AssertInstruction(IInstructionRV32I instruction, string expected)
+        {
+            var actual = instruction.ToString()!;
+            Assert.Equal(expected, actual);
+
+            var parsed = IInstructionRV32I.Parse(actual);
+            Assert.Equal(instruction.Code, parsed.Code);
         }
     }
 }

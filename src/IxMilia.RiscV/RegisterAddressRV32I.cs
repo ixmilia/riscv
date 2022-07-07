@@ -35,4 +35,9 @@
         R30 = 30,
         R31 = 31,
     }
+
+    public static class RegisterAddressRV32IExtensions
+    {
+        public static string ToDisplayString(this RegisterAddressRV32I r) => $"x{(int)r}";
+    }
 }
