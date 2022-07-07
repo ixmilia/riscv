@@ -1,4 +1,6 @@
-﻿namespace IxMilia.RiscV
+﻿using System.Text.RegularExpressions;
+
+namespace IxMilia.RiscV
 {
     public struct InstructionRV32I_I : IInstructionRV32I
     {
@@ -225,6 +227,125 @@
                     break;
                 default:
                     throw new NotImplementedException();
+            }
+        }
+
+        public override string ToString()
+        {
+            return (((IInstructionRV32I)this).OpCode, Function3) switch
+            {
+                (JalrOpCode, JalrFunct3) => $"jalr {DestinationRegister.ToDisplayString()}, 0x{ImmediateValue:X}({SourceRegister1.ToDisplayString()})",
+                (LoadOpCode, LWFunct3) => $"lw {DestinationRegister.ToDisplayString()}, 0x{ImmediateValue:X}({SourceRegister1.ToDisplayString()})",
+                (LoadOpCode, LHFunct3) => $"lh {DestinationRegister.ToDisplayString()}, 0x{ImmediateValue:X}({SourceRegister1.ToDisplayString()})",
+                (LoadOpCode, LHUFunct3) => $"lhu {DestinationRegister.ToDisplayString()}, 0x{ImmediateValue:X}({SourceRegister1.ToDisplayString()})",
+                (LoadOpCode, LBFunct3) => $"lb {DestinationRegister.ToDisplayString()}, 0x{ImmediateValue:X}({SourceRegister1.ToDisplayString()})",
+                (LoadOpCode, LBUFunct3) => $"lbu {DestinationRegister.ToDisplayString()}, 0x{ImmediateValue:X}({SourceRegister1.ToDisplayString()})",
+                (LogicalOpCode, AddIFunct3) => $"addi {DestinationRegister.ToDisplayString()}, {SourceRegister1.ToDisplayString()}, 0x{ImmediateValue:X}",
+                (LogicalOpCode, SltIFunct3) => $"slti {DestinationRegister.ToDisplayString()}, {SourceRegister1.ToDisplayString()}, 0x{ImmediateValue:X}",
+                (LogicalOpCode, SltIUFunct3) => $"sltiu {DestinationRegister.ToDisplayString()}, {SourceRegister1.ToDisplayString()}, 0x{ImmediateValue:X}",
+                (LogicalOpCode, AndIFunct3) => $"andi {DestinationRegister.ToDisplayString()}, {SourceRegister1.ToDisplayString()}, 0x{ImmediateValue:X}",
+                (LogicalOpCode, OrIFunct3) => $"ori {DestinationRegister.ToDisplayString()}, {SourceRegister1.ToDisplayString()}, 0x{ImmediateValue:X}",
+                (LogicalOpCode, XorIFunct3) => $"xori {DestinationRegister.ToDisplayString()}, {SourceRegister1.ToDisplayString()}, 0x{ImmediateValue:X}",
+                (LogicalOpCode, SllIFunct3) => $"slli {DestinationRegister.ToDisplayString()}, {SourceRegister1.ToDisplayString()}, 0x{ImmediateValue:X}",
+                (LogicalOpCode, SrlIFunct3) => $"srli {DestinationRegister.ToDisplayString()}, {SourceRegister1.ToDisplayString()}, 0x{ImmediateValue:X}",
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        private static Regex RegisterAndOffsetPattern = new Regex(@"\s*(?<destination>[^,]+), +(?<offset>[^(]+)\((?<source>[^)]+)\)\s*");
+        private static Regex RegisterAndImmediatePattern = new Regex(@"\s*(?<destination>[^,]+), +(?<source>[^,]+), +(?<offset>.+)\s*");
+
+        internal static bool TryParseRemainder(string instruction, string s, out InstructionRV32I_I result)
+        {
+            result = default;
+            switch (instruction)
+            {
+                case "jalr":
+                    {
+                        var match = RegisterAndOffsetPattern.Match(s);
+                        result = Jalr(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "lw":
+                    {
+                        var match = RegisterAndOffsetPattern.Match(s);
+                        result = LW(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "lh":
+                    {
+                        var match = RegisterAndOffsetPattern.Match(s);
+                        result = LH(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "lhu":
+                    {
+                        var match = RegisterAndOffsetPattern.Match(s);
+                        result = LHU(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "lb":
+                    {
+                        var match = RegisterAndOffsetPattern.Match(s);
+                        result = LB(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "lbu":
+                    {
+                        var match = RegisterAndOffsetPattern.Match(s);
+                        result = LBU(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "addi":
+                    {
+                        var match = RegisterAndImmediatePattern.Match(s);
+                        result = AddI(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "slti":
+                    {
+                        var match = RegisterAndImmediatePattern.Match(s);
+                        result = SltI(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "sltiu":
+                    {
+                        var match = RegisterAndImmediatePattern.Match(s);
+                        result = SltIU(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "andi":
+                    {
+                        var match = RegisterAndImmediatePattern.Match(s);
+                        result = AndI(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "ori":
+                    {
+                        var match = RegisterAndImmediatePattern.Match(s);
+                        result = OrI(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "xori":
+                    {
+                        var match = RegisterAndImmediatePattern.Match(s);
+                        result = XorI(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "slli":
+                    {
+                        var match = RegisterAndImmediatePattern.Match(s);
+                        result = SllI(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                case "srli":
+                    {
+                        var match = RegisterAndImmediatePattern.Match(s);
+                        result = SrlI(match.Groups["destination"].Value.ParseRegister(), match.Groups["source"].Value.ParseRegister(), match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                default:
+                    return false;
             }
         }
     }
