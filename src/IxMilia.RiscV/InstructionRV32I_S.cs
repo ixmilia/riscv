@@ -1,4 +1,7 @@
-﻿namespace IxMilia.RiscV
+﻿using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
+
+namespace IxMilia.RiscV
 {
     public struct InstructionRV32I_S : IInstructionRV32I
     {
@@ -102,6 +105,41 @@
             }
 
             executionState.PC += 4;
+        }
+
+        public override string ToString()
+        {
+            var args = $"{SourceRegister2.ToDisplayString()}, 0x{ImmediateValue:X}({SourceRegister1.ToDisplayString()})";
+            var instruction = Function3 switch
+            {
+                SbFunct3 => $"sb",
+                ShFunct3 => $"sh",
+                SwFunct3 => $"sw",
+                _ => throw new NotImplementedException(),
+            };
+
+            return $"{instruction} {args}";
+        }
+
+        internal static bool TryParseRemainder(string instruction, string s, out InstructionRV32I_S result)
+        {
+            result = default;
+            Func<RegisterAddressRV32I, RegisterAddressRV32I, int, InstructionRV32I_S>? creator = instruction switch
+            {
+                "sb" => SB,
+                "sh" => SH,
+                "sw" => SW,
+                _ => null,
+            };
+
+            if (creator is null)
+            {
+                return false;
+            }
+
+            var match = Regex.Match(s, @"\s*(?<source2>[^,]+), +(?<offset>[^(]+)\((?<source1>[^)]+)\)\s*");
+            result = creator(match.Groups["source1"].Value.ParseRegister(), match.Groups["source2"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+            return true;
         }
     }
 }
