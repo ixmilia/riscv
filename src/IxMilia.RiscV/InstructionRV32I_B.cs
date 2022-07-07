@@ -69,7 +69,7 @@ namespace IxMilia.RiscV
             }
         }
 
-        public static InstructionRV32I_B Decode(uint code)
+        internal static InstructionRV32I_B Decode(uint code)
         {
             var i = new InstructionRV32I_B(code);
             switch ((((IInstructionRV32I)i).OpCode, BitMaskHelpers.GetBitsUint(code, 12, 3)))

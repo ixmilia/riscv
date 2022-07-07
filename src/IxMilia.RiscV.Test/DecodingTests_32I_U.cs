@@ -4,7 +4,7 @@ namespace IxMilia.RiscV.Test
 {
     public class DecodingTests_32I_U : TestBase
     {
-        private static InstructionRV32I_U Decode(uint code) => InstructionRV32I_U.Decode(code);
+        private static InstructionRV32I_U Decode(uint code) => (InstructionRV32I_U)ExecutionStateRV32I.Decode(code);
 
         protected static void AssertEqualBinary(uint expected, uint actual)
         {

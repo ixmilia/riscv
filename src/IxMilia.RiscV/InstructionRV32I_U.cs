@@ -31,7 +31,7 @@
             set => Code = BitMaskHelpers.SetBitsUint(Code, 12, 20, value >> 12);
         }
 
-        public static InstructionRV32I_U Decode(uint code)
+        internal static InstructionRV32I_U Decode(uint code)
         {
             var i = new InstructionRV32I_U(code);
             switch (((IInstructionRV32I)i).OpCode)

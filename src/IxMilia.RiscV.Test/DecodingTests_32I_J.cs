@@ -14,7 +14,7 @@ namespace IxMilia.RiscV.Test
             Assert.Equal(expectedS, actualS);
         }
 
-        private static InstructionRV32I_J Decode(uint code) => InstructionRV32I_J.Decode(code);
+        private static InstructionRV32I_J Decode(uint code) => (InstructionRV32I_J)ExecutionStateRV32I.Decode(code);
 
         [Fact]
         public void J_rd()

@@ -5,7 +5,7 @@ namespace IxMilia.RiscV.Test
 {
     public class DecodingTests_32I_R : TestBase
     {
-        private static InstructionRV32I_R Decode(uint code) => InstructionRV32I_R.Decode(code);
+        private static InstructionRV32I_R Decode(uint code) => (InstructionRV32I_R)ExecutionStateRV32I.Decode(code);
 
         [Fact]
         public void R_rd()

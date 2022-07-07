@@ -2,7 +2,7 @@
 {
     public struct InstructionRV32I_I : IInstructionRV32I
     {
-        public const uint JalrOpCode = 0b1101111;
+        public const uint JalrOpCode = 0b1100111;
         public const uint LogicalOpCode = 0b0010011;
         public const uint LoadOpCode = 0b0000011;
 
@@ -80,7 +80,7 @@
             set => Code = BitMaskHelpers.SetBitsUint(Code, 20, 12, value);
         }
 
-        public static InstructionRV32I_I Decode(uint code)
+        internal static InstructionRV32I_I Decode(uint code)
         {
             var i = new InstructionRV32I_I(code);
             switch (((IInstructionRV32I)i).OpCode, i.Function3)

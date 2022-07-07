@@ -4,7 +4,7 @@ namespace IxMilia.RiscV.Test
 {
     public class DecodingTests_32I_I : TestBase
     {
-        private static InstructionRV32I_I Decode(uint code) => InstructionRV32I_I.Decode(code);
+        private static InstructionRV32I_I Decode(uint code) => (InstructionRV32I_I)ExecutionStateRV32I.Decode(code);
 
         [Fact]
         public void I_rd()
@@ -191,7 +191,7 @@ namespace IxMilia.RiscV.Test
         [Fact]
         public void Jalr()
         {
-            var c = Decode(0b000000001111_00010_000_10001_1101111u);
+            var c = Decode(0b000000001111_00010_000_10001_1100111u);
             //               immediate    rs1   f3  dest  opcode
             Assert.Equal(RegisterAddressRV32I.R2, c.SourceRegister1);
             Assert.Equal(15, c.ImmediateValue);

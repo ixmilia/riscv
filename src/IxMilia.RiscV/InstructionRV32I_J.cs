@@ -46,7 +46,7 @@
             }
         }
 
-        public static InstructionRV32I_J Decode(uint code)
+        internal static InstructionRV32I_J Decode(uint code)
         {
             var i = new InstructionRV32I_J(code);
             switch (((IInstructionRV32I)i).OpCode)

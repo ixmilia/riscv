@@ -160,7 +160,7 @@ namespace IxMilia.RiscV.Test
         public void Jalr()
         {
             var i = InstructionRV32I_I.Jalr(RegisterAddressRV32I.R2, RegisterAddressRV32I.R17, -4);
-            AssertEqualBinary(0b111111111100_10001_000_00010_1101111u, i.Code);
+            AssertEqualBinary(0b111111111100_10001_000_00010_1100111u, i.Code);
             //                  immediate    rs1   f3  dest  opcode
         }
     }

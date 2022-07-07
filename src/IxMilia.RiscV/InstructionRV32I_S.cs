@@ -55,7 +55,7 @@
             set => Code = BitMaskHelpers.SetBitsUint(BitMaskHelpers.SetBitsUint(Code, 7, 5, BitMaskHelpers.GetMask(5) & (uint)value), 25, 7, BitMaskHelpers.GetMask(7) & (uint)(value >> 5));
         }
 
-        public static InstructionRV32I_S Decode(uint code)
+        internal static InstructionRV32I_S Decode(uint code)
         {
             var i = new InstructionRV32I_S(code);
             switch (i.Function3)
