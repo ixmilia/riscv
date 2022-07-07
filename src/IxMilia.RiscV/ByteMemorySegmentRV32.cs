@@ -4,7 +4,7 @@
     {
         public uint BaseAddress { get; }
 
-        public uint Size => (uint)(BaseAddress + Data.Length);
+        public uint Size => (uint)Data.Length;
 
         public byte[] Data { get; }
 
@@ -21,12 +21,16 @@
 
         public byte ReadByte(uint address)
         {
-            return Data[address - BaseAddress];
+            var offset = address - BaseAddress;
+            return Data[offset];
         }
 
         public void WriteByte(uint address, byte value)
         {
-            Data[address - BaseAddress] = value;
+            var offset = address - BaseAddress;
+            Data[offset] = value;
         }
+
+        public override string ToString() => $"[{BaseAddress:X}-{BaseAddress + Size:X}]";
     }
 }
