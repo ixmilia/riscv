@@ -1,4 +1,6 @@
-﻿namespace IxMilia.RiscV
+﻿using System.Text.RegularExpressions;
+
+namespace IxMilia.RiscV
 {
     public struct InstructionRV32I_J : IInstructionRV32I
     {
@@ -73,6 +75,33 @@
                     break;
                 default:
                     throw new NotSupportedException();
+            }
+        }
+
+        public override string ToString()
+        {
+            switch (((IInstructionRV32I)this).OpCode)
+            {
+                case JalOpCode:
+                    return $"jal {DestinationRegister.ToDisplayString()}, 0x{AddressOffset:X}";
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        internal static bool TryParseRemainder(string instruction, string s, out InstructionRV32I_J result)
+        {
+            result = default;
+            switch (instruction)
+            {
+                case "jal":
+                    {
+                        var match = Regex.Match(s, @"\s*(?<destination>[^,]+), +(?<offset>.+)\s*");
+                        result = Jal(match.Groups["destination"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
+                        return true;
+                    }
+                default:
+                    return false;
             }
         }
     }
