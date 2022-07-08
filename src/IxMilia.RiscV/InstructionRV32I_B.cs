@@ -199,11 +199,14 @@ namespace IxMilia.RiscV
             {
                 "beq" => Beq,
                 "bne" => Bne,
+                "ble" => Ble,
+                "bleu" => BleU,
                 "blt" => Blt,
                 "bltu" => BltU,
                 "bge" => Bge,
                 "bgeu" => BgeU,
                 "bgt" => Bgt,
+                "bgtu" => BgtU,
                 _ => null,
             };
 

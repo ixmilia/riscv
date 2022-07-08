@@ -284,8 +284,8 @@
         public void AddMemorySegment(IMemorySegmentRV32 ms)
         {
             var start = ms.BaseAddress;
-            var end = ms.BaseAddress + ms.Size;
-            if (_memorySegments.Any(ms => ms.ContainsAddress(ms.BaseAddress) || ms.ContainsAddress(ms.BaseAddress + ms.Size)))
+            var end = start + ms.Size;
+            if (_memorySegments.Any(m => m.ContainsAddress(start) || m.ContainsAddress(end)))
             {
                 throw new NotSupportedException("memory segment overlap");
             }

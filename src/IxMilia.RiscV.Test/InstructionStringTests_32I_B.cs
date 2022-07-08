@@ -63,5 +63,17 @@ namespace IxMilia.RiscV.Test
         {
             AssertInstruction(IInstructionRV32I.BleU(RegisterAddressRV32I.R2, RegisterAddressRV32I.R3, 0x1234), "bgeu x3, x2, 0x1234");
         }
+
+        [Theory]
+        [InlineData("blt x2, x3, 0x1234", "bgt x3, x2, 0x1234")]
+        [InlineData("bltu x2, x3, 0x1234", "bgtu x3, x2, 0x1234")]
+        [InlineData("bge x2, x3, 0x1234", "ble x3, x2, 0x1234")]
+        [InlineData("bgeu x2, x3, 0x1234", "bleu x3, x2, 0x1234")]
+        public void ParseAlternates(string canonical, string alternate)
+        {
+            var canonicalParsed = IInstructionRV32I.Parse(canonical);
+            var alternateParsed = IInstructionRV32I.Parse(alternate);
+            Assert.Equal(canonicalParsed.ToString(), alternateParsed.ToString());
+        }
     }
 }

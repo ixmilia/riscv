@@ -17,13 +17,21 @@ namespace IxMilia.RiscV
 
         public static uint ParseNumber(this string s)
         {
+            var style = NumberStyles.Integer;
             s = s.ToLowerInvariant();
+
+            if (s.StartsWith("-"))
+            {
+                return (uint)int.Parse(s);
+            }
+
             if (s.StartsWith("0x"))
             {
                 s = s.Substring(2);
+                style = NumberStyles.HexNumber;
             }
 
-            return uint.Parse(s, NumberStyles.HexNumber);
+            return uint.Parse(s, style);
         }
     }
 }
