@@ -36,7 +36,7 @@ namespace IxMilia.RiscV.Test
             var actual = instruction.ToString()!;
             Assert.Equal(expected, actual);
 
-            var parsed = IInstructionRV32I.Parse(actual);
+            var parsed = IInstructionRV32I.ParseInstruction(actual);
             var expectedBinary = AsBinary(instruction.Code, 8, 16, 24);
             var actualBinary = AsBinary(parsed.Code, 8, 16, 24);
             Assert.Equal(expectedBinary, actualBinary);

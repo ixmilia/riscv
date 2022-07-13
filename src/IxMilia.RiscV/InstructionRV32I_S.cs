@@ -137,7 +137,7 @@ namespace IxMilia.RiscV
                 return false;
             }
 
-            var match = Regex.Match(s, @"\s*(?<source2>[^,]+), +(?<offset>[^(]+)\((?<source1>[^)]+)\)\s*");
+            var match = Regex.Match(s, @"\s*(?<source2>[^,]+), *(?<offset>[^(]+)\((?<source1>[^)]+)\)\s*");
             result = creator(match.Groups["source1"].Value.ParseRegister(), match.Groups["source2"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
             return true;
         }

@@ -57,7 +57,26 @@
         public static IInstructionRV32I Ble(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => InstructionRV32I_B.Ble(source1, source2, immediate);
         public static IInstructionRV32I BleU(RegisterAddressRV32I source1, RegisterAddressRV32I source2, int immediate) => InstructionRV32I_B.BleU(source1, source2, immediate);
 
-        public static IInstructionRV32I Parse(string s)
+        public static IEnumerable<IInstructionRV32I> Parse(string s)
+        {
+            var instructions = new List<IInstructionRV32I>();
+            foreach (var line in s.Split('\n'))
+            {
+                var commentIndex = line.IndexOf('#');
+                var trimmedLine = commentIndex < 0
+                    ? line.Trim()
+                    : line.Substring(0, commentIndex).Trim();
+                if (trimmedLine.Length > 0)
+                {
+                    var i = ParseInstruction(trimmedLine);
+                    instructions.Add(i);
+                }
+            }
+
+            return instructions;
+        }
+
+        public static IInstructionRV32I ParseInstruction(string s)
         {
             s = s.ToLowerInvariant();
             var firstSpace = s.IndexOf(' ');
@@ -66,8 +85,8 @@
                 firstSpace = s.Length;
             }
 
-            var instructionName = s.Substring(0, firstSpace);
-            var remainder = s.Substring(firstSpace);
+            var instructionName = s.Substring(0, firstSpace).Trim();
+            var remainder = s.Substring(firstSpace).Trim();
 
             if (InstructionRV32I_B.TryParseRemainder(instructionName, remainder, out var bResult))
             {

@@ -199,7 +199,7 @@ namespace IxMilia.RiscV
         internal static bool TryParseRemainder(string instruction, string s, out InstructionRV32I_R result)
         {
             result = default;
-            var match = Regex.Match(s, @"\s*(?<destination>[^,]+), +(?<source1>[^,]+), +(?<source2>.+)\s*");
+            var match = Regex.Match(s, @"\s*(?<destination>[^,]+), *(?<source1>[^,]+), *(?<source2>.+)\s*");
             Func<RegisterAddressRV32I, RegisterAddressRV32I, RegisterAddressRV32I, InstructionRV32I_R>? creator = instruction switch
             {
                 "add" => Add,

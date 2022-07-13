@@ -96,7 +96,7 @@ namespace IxMilia.RiscV
             {
                 case "jal":
                     {
-                        var match = Regex.Match(s, @"\s*(?<destination>[^,]+), +(?<offset>.+)\s*");
+                        var match = Regex.Match(s, @"\s*(?<destination>[^,]+), *(?<offset>.+)\s*");
                         result = Jal(match.Groups["destination"].Value.ParseRegister(), (int)match.Groups["offset"].Value.ParseNumber());
                         return true;
                     }

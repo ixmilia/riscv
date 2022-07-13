@@ -71,8 +71,8 @@ namespace IxMilia.RiscV.Test
         [InlineData("bgeu x2, x3, 0x1234", "bleu x3, x2, 0x1234")]
         public void ParseAlternates(string canonical, string alternate)
         {
-            var canonicalParsed = IInstructionRV32I.Parse(canonical);
-            var alternateParsed = IInstructionRV32I.Parse(alternate);
+            var canonicalParsed = IInstructionRV32I.ParseInstruction(canonical);
+            var alternateParsed = IInstructionRV32I.ParseInstruction(alternate);
             Assert.Equal(canonicalParsed.ToString(), alternateParsed.ToString());
         }
     }

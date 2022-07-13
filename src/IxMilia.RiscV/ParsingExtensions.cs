@@ -6,7 +6,6 @@ namespace IxMilia.RiscV
     {
         public static RegisterAddressRV32I ParseRegister(this string s)
         {
-            s = s.ToLowerInvariant();
             if (!s.StartsWith("x"))
             {
                 throw new NotSupportedException();
@@ -18,7 +17,6 @@ namespace IxMilia.RiscV
         public static uint ParseNumber(this string s)
         {
             var style = NumberStyles.Integer;
-            s = s.ToLowerInvariant();
 
             if (s.StartsWith("-"))
             {

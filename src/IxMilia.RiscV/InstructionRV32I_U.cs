@@ -105,7 +105,7 @@ namespace IxMilia.RiscV
                 return false;
             }
 
-            var match = Regex.Match(s, @"\s*(?<destination>[^,]+), +(?<offset>.+)\s*");
+            var match = Regex.Match(s, @"\s*(?<destination>[^,]+), *(?<offset>.+)\s*");
             result = creator(match.Groups["destination"].Value.ParseRegister(), match.Groups["offset"].Value.ParseNumber() << 12);
             return true;
         }

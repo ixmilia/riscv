@@ -252,8 +252,8 @@ namespace IxMilia.RiscV
             };
         }
 
-        private static Regex RegisterAndOffsetPattern = new Regex(@"\s*(?<destination>[^,]+), +(?<offset>[^(]+)\((?<source>[^)]+)\)\s*");
-        private static Regex RegisterAndImmediatePattern = new Regex(@"\s*(?<destination>[^,]+), +(?<source>[^,]+), +(?<offset>.+)\s*");
+        private static Regex RegisterAndOffsetPattern = new Regex(@"\s*(?<destination>[^,]+), *(?<offset>[^(]+)\((?<source>[^)]+)\)\s*");
+        private static Regex RegisterAndImmediatePattern = new Regex(@"\s*(?<destination>[^,]+), *(?<source>[^,]+), *(?<offset>.+)\s*");
 
         internal static bool TryParseRemainder(string instruction, string s, out InstructionRV32I_I result)
         {
